@@ -7,6 +7,7 @@ typedef struct student_s
     char *firstname;
     char *lastname;
     char *promotion;
+    subjectList_t *subjectList;
     struct student_s *next;
 } student_t;
 

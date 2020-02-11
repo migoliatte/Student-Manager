@@ -1,8 +1,6 @@
-#include "../HEADERS/student.h"
-#include "../HEADERS/subject.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef _STUDENT_C_
+#define _STUDENT_C_
+#include "../HEADERS/header.h"
 
 studentList_t *studentInitialisation()
 {
@@ -25,14 +23,15 @@ void newStudent(studentList_t *studentList, char *studentFirstname, char *studen
     exit(EXIT_FAILURE);
   }
   studentList->nbrOfStudent++;
-  student->firstname = malloc(10);
-  student->lastname = malloc(10);
-  student->promotion = malloc(10);
+  student->firstname = malloc(10*sizeof(char));
+  student->lastname = malloc(10*sizeof(char));
+  student->promotion = malloc(10*sizeof(char));
 
   strcpy(student->firstname, studentFirstname);
   strcpy(student->lastname, studentLastname);
   strcpy(student->promotion, studentPromotion);
   student->id = studentList->nbrOfStudent;
+  student->subjectList = subjectInitialisation();
 
   /* Insertion de l'élément au début de la liste */
   student->next = studentList->first;
@@ -52,12 +51,15 @@ void deleteFirstStudent(studentList_t *studentList)
     free(toDelete->firstname);
     free(toDelete->lastname);
     free(toDelete->promotion);
+   // deleteAll(toDelete->subjectList);
     studentList->first = studentList->first->next;
+
     studentList->nbrOfStudent--;
     free(toDelete);
   }
 }
 
+/*
 void printListStudent(studentList_t *studentList)
 {
   if (studentList == NULL)
@@ -66,13 +68,16 @@ void printListStudent(studentList_t *studentList)
   }
 
   student_t *actualStudent = studentList->first;
-  printf("-+-+-+-+-+-+-+ Début printListStudent-+-+-+-+-+-+-+-+-\n");
+  fprintf(stdout,"-+-+-+-+-+-+-+ Début printListStudent-+-+-+-+-+-+-+-+-\n");
 
   while (actualStudent != NULL)
   {
-    printf("prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", actualStudent->firstname, actualStudent->lastname, actualStudent->promotion, actualStudent->id);
-    printf("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
+    fprintf(stdout,"prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", actualStudent->firstname, actualStudent->lastname, actualStudent->promotion, actualStudent->id);
+    fprintf(stdout,"-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
     actualStudent = actualStudent->next;
   }
-  printf("-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
+  fprintf(stdout,"-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
 }
+*/
+
+#endif
