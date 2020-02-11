@@ -1,6 +1,7 @@
-#include "../HEADERS/header.h"
+#include "../headers/header.h"
 
-subjectList_t *subjectInitialisation()
+/*Initialise la structure subjectList_t*/
+subjectList_t *subjectInitialisation(void)
 {
     subjectList_t *subjectList = malloc(sizeof(*subjectList));
     if (subjectList == NULL)
@@ -12,7 +13,8 @@ subjectList_t *subjectInitialisation()
     return subjectList;
 }
 
-void newSubject(subjectList_t *subjectList, char *subjectName, double subjectNote, double subjectScale)
+/*Ajoute la matière dans la structure subjectList_t en fonction des données de l'utilisateur*/
+void addNewSubject(subjectList_t *subjectList, char *subjectName, double subjectNote, double subjectScale)
 {
     /* Création du nouvel élément */
     subject_t *subject = malloc(sizeof(*subject));
@@ -21,7 +23,7 @@ void newSubject(subjectList_t *subjectList, char *subjectName, double subjectNot
         exit(EXIT_FAILURE);
     }
 
-    subject->name = malloc(10);
+    subject->name = malloc(SIZE_MAX * sizeof(char));
     strcpy(subject->name, subjectName);
     subject->note = subjectNote;
     subject->scale = subjectScale;
@@ -32,6 +34,7 @@ void newSubject(subjectList_t *subjectList, char *subjectName, double subjectNot
     subjectList->first = subject;
 }
 
+/*Supprime et libère dans la mémoire la première matière de subjectList_t d'un étudiant */
 subject_t *deleteFirstSubject(subjectList_t *start)
 {
     subject_t *toDelete = start->first;
@@ -43,12 +46,14 @@ subject_t *deleteFirstSubject(subjectList_t *start)
     return start->first;
 }
 
-void *deleteAll(subjectList_t *start)
+/*Supprime et libère dans la mémoire toutes les matière de subjectList_t d'un étudiant*/
+void *deleteAllSubject(subjectList_t *start)
 {
     while (start != NULL)
         start->first = deleteFirstSubject(start);
     return NULL;
 }
+
 /*
 void printListSubject(subjectList_t *subjectList)
 {

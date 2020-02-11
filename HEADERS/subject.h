@@ -1,6 +1,5 @@
 #ifndef _SUBJECT_H_
 #define _SUBJECT_H_
-#include "../HEADERS/header.h"
 
 typedef struct subject_s
 {
@@ -16,10 +15,10 @@ typedef struct subjectList_s
     subject_t *first;
 } subjectList_t;
 
-subjectList_t *subjectInitialisation();
-void newSubject(subjectList_t *subjectList, char *subjectName, double subjectNote, double subjectScale);
+subjectList_t *subjectInitialisation(void);
+void addNewSubject(subjectList_t *subjectList, char *subjectName, double subjectNote, double subjectScale);
 subject_t *deleteFirstSubject(subjectList_t *start);
-void *deleteAll(subjectList_t *start);
+void *deleteAllSubject(subjectList_t *start);
 void printListSubject(subjectList_t *subjectList);
 
 #endif

@@ -17,8 +17,12 @@ typedef struct
     student_t *first;
 } studentList_t;
 
-studentList_t *studentInitialisation();
-void newStudent(studentList_t *studentList, char *studentFirstname, char *studentLastname, char *studentPromotion);
+studentList_t *studentInitialisation(void);
+
+void createNewSubject(studentList_t *studentList);
+
+void createNewStudent(studentList_t *studentList);    
+void addNewStudent(studentList_t *studentList, char *studentFirstname, char *studentLastname, char *studentPromotion);
 void deleteFirstStudent(studentList_t *studentList);
 void printListStudent(studentList_t *studentList);
 
