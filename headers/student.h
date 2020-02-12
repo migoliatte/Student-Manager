@@ -1,29 +1,17 @@
 #ifndef _STUDENT_H_
 #define _STUDENT_H_
-
-typedef struct student_s
-{
-    int id;
-    char *firstname;
-    char *lastname;
-    char *promotion;
-    subjectList_t *subjectList;
-    struct student_s *next;
-} student_t;
-
-typedef struct
-{
-    int nbrOfStudent;
-    student_t *first;
-} studentList_t;
+#include "header.h"
 
 studentList_t *studentInitialisation(void);
-
-void createNewSubject(studentList_t *studentList);
-
-void createNewStudent(studentList_t *studentList);    
-void addNewStudent(studentList_t *studentList, char *studentFirstname, char *studentLastname, char *studentPromotion);
+studentList_t *createNewStudent(studentList_t *studentList);
+studentList_t *addNewStudent(studentList_t *studentList, student_t *student);
 void deleteFirstStudent(studentList_t *studentList);
 void printListStudent(studentList_t *studentList);
+
+
+void displaySearchedStudent(studentList_t *studentList, char *firstname);
+studentList_t *deleteSearchedStudent(studentList_t *studentList, char *etudiantName);
+
+studentList_t *search(studentList_t *studentList, char *etudiantName);
 
 #endif

@@ -4,7 +4,7 @@
 void enterToContinue(void)
 {
     char *choix = malloc(3 * sizeof(char));
-    fgetsCheck(choix, "Enter to continue ", 3);
+    fgetsCheck(choix, "\nEnter to continue ", 3);
     free(choix);
     system("clear");
 }
@@ -59,35 +59,36 @@ int verifInt(void)
 }
 
 /*Affiche et traite le menu*/
-int menu(studentList_t * studentList)
+void menu(studentList_t *studentList)
 {
     enterToContinue();
-    fprintf(stdout, "=========== Gestionnaire d'students ==========\n");
-    fprintf(stdout, "1 - Lister les students\n");
-    fprintf(stdout, "2 - Ajouter un students\n");
-    fprintf(stdout, "3 - Supprimer un students\n");
-    fprintf(stdout, "4 - Modifier un student\n");
-    fprintf(stdout, "5 - Ajouter une note aux students\n");
-    fprintf(stdout, "6 - Détail sur un students\n");
-    fprintf(stdout, "7 - Lister les students supprimés\n");
+    fprintf(stdout, "=========== Gestionnaire d'étudiants ==========\n");
+    fprintf(stdout, "1 - Lister les étudiants\n");
+    fprintf(stdout, "2 - Ajouter un étudiant\n");
+    fprintf(stdout, "3 - Supprimer un étudiant\n");
+    fprintf(stdout, "4 - Modifier un étudiant\n");
+    fprintf(stdout, "5 - Ajouter une note aux étudiants\n");
+    fprintf(stdout, "6 - Détail sur un étudiant\n");
+    fprintf(stdout, "7 - Lister les étudiants supprimés\n");
     fprintf(stdout, "10 - Quitter\n");
     fprintf(stdout, "============================================\n");
     int choix;
+    char * inputUser=malloc(SIZE_MAX * sizeof(char));
     choix = verifInt();
     switch (choix)
     {
     case 1:
         system("clear");
+        printListStudent(studentList);
         break;
     case 2:
         system("clear");
-        createNewStudent(studentList);
+        studentList = createNewStudent(studentList);
         break;
     case 3:
         system("clear");
-        fprintf(stdout, " 3 !! \n");
-
-        //studentList = deleteOneStudent(studentList);
+//        fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
+      //  studentList = deleteSearchedStudent(studentList, searchStudent());
         break;
     case 4:
         system("clear");
@@ -99,15 +100,16 @@ int menu(studentList_t * studentList)
         break;
     case 6:
         system("clear");
-        // listOneStudent(studentList);
+        fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
+        displaySearchedStudent(studentList, inputUser);
         break;
     case 7:
         system("clear");
         // listStudentDeleted(studentList);
         break;
     case 10:
-        system("clear");
-        return 0;
+        printf("bonjour %d", SIZE_MAX);
+        return;
     default:
         system("clear");
         fprintf(stdout, " ! ! ! Erreur  Option Invalide ! ! ! \nVeuillez choisir une option valide.\n");
@@ -115,6 +117,25 @@ int menu(studentList_t * studentList)
         break;
     }
     menu(studentList);
-    return 0;
 }
 
+void allFree(studentList_t *studentList)
+{
+    if (studentList->student->subjectList->first->name != NULL)
+        free(studentList->student->subjectList->first->name);
+
+    if (studentList->student->firstname != NULL)
+        free(studentList->student->firstname);
+
+    if (studentList->student->lastname != NULL)
+        free(studentList->student->lastname);
+
+    if (studentList->student->promotion != NULL)
+        free(studentList->student->promotion);
+
+    if (studentList->student->subjectList != NULL)
+        deleteAllSubject(studentList->student->subjectList);
+
+    if (studentList != NULL)
+        free(studentList);
+}

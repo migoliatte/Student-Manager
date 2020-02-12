@@ -8,61 +8,34 @@ studentList_t *studentInitialisation(void)
   {
     exit(EXIT_FAILURE);
   }
-  liste->first = NULL;
-  liste->nbrOfStudent = 0;
+  liste->student = NULL;
+  liste->next = NULL;
   return liste;
 }
 
 /*Récuperation des informations de l'étudiant ajouté par l'utilisateur*/
-void createNewStudent(studentList_t *studentList)
+studentList_t *createNewStudent(studentList_t *studentList)
 {
-  char *firstname = malloc(SIZE_MAX * sizeof(char));
-  char *lastname = malloc(SIZE_MAX * sizeof(char));
-  char *promotion = malloc(SIZE_MAX * sizeof(char));
-  if (firstname == NULL || lastname == NULL || promotion == NULL)
+  char *studentFirstname = malloc(SIZE_MAX * sizeof(char));
+  char *studentLastname = malloc(SIZE_MAX * sizeof(char));
+  char *studentPromotion = malloc(SIZE_MAX * sizeof(char));
+  if (studentFirstname == NULL || studentLastname == NULL || studentPromotion == NULL)
   {
-    //return 0;
+    printf("error");
   }
 
-  fgetsCheck(firstname, "Veuillez rentrer votre prénom",SIZE_MAX);
+  fgetsCheck(studentFirstname, "Veuillez rentrer votre prénom", SIZE_MAX);
 
-  fgetsCheck(lastname, "\nVeuillez rentrer votre nom de famille",SIZE_MAX);
+  fgetsCheck(studentLastname, "\nVeuillez rentrer votre nom de famille", SIZE_MAX);
 
-  fgetsCheck(promotion, "\nVeuillez rentrer votre promotion",SIZE_MAX);
+  fgetsCheck(studentPromotion, "\nVeuillez rentrer votre promotion", SIZE_MAX);
 
-  addNewStudent(studentList, firstname, lastname, promotion);
-
-  free(firstname);
-  free(lastname);
-  free(promotion);
-}
-
-/*Récuperation des informations de la matière ajouté par l'utilisateur, elle se trouve ici et non dans subject.c car studentList_t n'y ai pas défini*/
-void createNewSubject(studentList_t *studentList)
-{
-    char *name = malloc(SIZE_MAX * sizeof(char));
-    if (name == NULL)
-    {
-      exit(EXIT_FAILURE);
-    }
-    double note = 10.5;
-    double scale = 2;
-    fgetsCheck(name, "\nVeuillez rentrer le nom de la matière",SIZE_MAX);
-
-    addNewSubject(studentList->first->subjectList, name, note, scale);
-    free(name);
-}
-
-/*Ajoute l'étudiant dans la structure studentList_t en fonction des données de l'utilisateur*/
-void addNewStudent(studentList_t *studentList, char *studentFirstname, char *studentLastname, char *studentPromotion)
-{
   /* Création du nouvel élément */
   student_t *student = malloc(sizeof(*student));
-  if (studentList == NULL || student == NULL)
+  if (student == NULL)
   {
     exit(EXIT_FAILURE);
   }
-  studentList->nbrOfStudent++;
   student->firstname = malloc(SIZE_MAX * sizeof(char));
   student->lastname = malloc(SIZE_MAX * sizeof(char));
   student->promotion = malloc(SIZE_MAX * sizeof(char));
@@ -70,12 +43,40 @@ void addNewStudent(studentList_t *studentList, char *studentFirstname, char *stu
   strcpy(student->firstname, studentFirstname);
   strcpy(student->lastname, studentLastname);
   strcpy(student->promotion, studentPromotion);
-  student->id = studentList->nbrOfStudent;
+  student->id = 0; // à changer en comptant les utilisateurs)
   student->subjectList = subjectInitialisation();
 
+  studentList = addNewStudent(studentList, student);
+
+  free(studentFirstname);
+  free(studentLastname);
+  free(studentPromotion);
+  return studentList;
+}
+
+/*Ajoute l'étudiant dans la structure studentList_t en fonction des données de l'utilisateur*/
+studentList_t *addNewStudent(studentList_t *studentList, student_t *student)
+{
+  if (studentList == NULL)
+  {
+    // exit(EXIT_FAILURE);
+    studentList->student = student;
+    studentList->next = NULL;
+    return studentList;
+  }
+  else
+  {
+    studentList_t *new = malloc(sizeof(studentList_t));
+
+    new->student = student;
+    new->next = studentList;
+    return new;
+  }
+
   /* Insertion de l'élément au début de la liste */
-  student->next = studentList->first;
-  studentList->first = student;
+  //studentList->next = studentList;
+  //studentList->student = student;
+  //studentList->next->next=NULL;
 }
 
 /*Supprime et libère dans la mémoire le premier étudiant de studentList*/
@@ -86,37 +87,100 @@ void deleteFirstStudent(studentList_t *studentList)
     exit(EXIT_FAILURE);
   }
 
-  if (studentList->first != NULL)
+  if (studentList->student != NULL)
   {
-    student_t *toDelete = studentList->first;
+    student_t *toDelete = studentList->student;
     free(toDelete->firstname);
     free(toDelete->lastname);
     free(toDelete->promotion);
     deleteAllSubject(toDelete->subjectList);
-    studentList->first = studentList->first->next;
+    studentList = studentList->next;
 
-    studentList->nbrOfStudent--;
     free(toDelete);
   }
 }
-
-/*
+/* Affichage de prenom/nom/id de tous les étudiants */
 void printListStudent(studentList_t *studentList)
 {
   if (studentList == NULL)
   {
     exit(EXIT_FAILURE);
   }
-
-  student_t *actualStudent = studentList->first;
-  fprintf(stdout,"-+-+-+-+-+-+-+ Début printListStudent-+-+-+-+-+-+-+-+-\n");
-
-  while (actualStudent != NULL)
+  if (studentList->student == NULL)
   {
-    fprintf(stdout,"prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", actualStudent->firstname, actualStudent->lastname, actualStudent->promotion, actualStudent->id);
-    fprintf(stdout,"-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
-    actualStudent = actualStudent->next;
+    fprintf(stdout, "-+-+-+-+-+-+-+ Veuillez créer des étudiants -+-+-+-+-+-+-+-+-\n");
   }
-  fprintf(stdout,"-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
+  else
+  {
+    studentList_t *currentList = studentList;
+    fprintf(stdout, "-+-+-+-+-+-+-+ Début printListStudent-+-+-+-+-+-+-+-+-\n");
+
+    while (currentList->next)
+    {
+      fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", currentList->student->firstname, currentList->student->lastname, currentList->student->promotion, currentList->student->id);
+      if (currentList->next->next)
+      {
+        fprintf(stdout, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
+      }
+      currentList = currentList->next;
+    }
+    fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
+  }
 }
-*/
+
+studentList_t *search(studentList_t *studentList, char *etudiantName)
+{
+  studentList_t *currentList = studentList;
+  while (currentList->next)
+  {
+
+    if (strcmp((char *)currentList->student->firstname, etudiantName) == 0)
+    {
+      printf("trouvé: %s", currentList->student->firstname);
+      return currentList;
+    }
+    else
+    {
+      currentList = currentList->next;
+    }
+  }
+
+  printf("elt non trouvé");
+  return NULL;
+}
+
+void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
+{
+  studentList_t *studentToDisplay = search(studentList, etudiantName);
+  if (studentToDisplay)
+  {
+    printf("\ntrouvé encoure héhé");
+  }
+  else
+  {
+    printf("\nNooooope");
+  }
+}
+
+studentList_t *deleteSearchedStudent(studentList_t *studentList, char *etudiantName)
+{
+  studentList_t *studentToDelete = search(studentList, etudiantName);
+  if (studentToDelete)
+  {
+    printf("trouvé: %s", studentToDelete->student->firstname);
+    
+    free(studentToDelete->student->firstname);
+    free(studentToDelete->student->lastname);
+    free(studentToDelete->student->promotion);
+    deleteAllSubject(studentToDelete->student->subjectList);
+    free(studentToDelete->student);
+
+    studentToDelete = studentToDelete->next;
+    return studentToDelete;
+  }
+  else
+  {
+    printf("Nooooope");
+  }
+  return NULL;
+}

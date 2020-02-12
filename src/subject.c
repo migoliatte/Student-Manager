@@ -12,6 +12,21 @@ subjectList_t *subjectInitialisation(void)
     subjectList->nbrOfSubject = 0;
     return subjectList;
 }
+/*Récuperation des informations de la matière ajouté par l'utilisateur*/
+void createNewSubject(studentList_t *studentList)
+{
+    char *name = malloc(SIZE_MAX * sizeof(char));
+    if (name == NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+    double note = 10.5;
+    double scale = 2;
+    fgetsCheck(name, "\nVeuillez rentrer le nom de la matière", SIZE_MAX);
+
+    addNewSubject(studentList->student->subjectList, name, note, scale);
+    free(name);
+}
 
 /*Ajoute la matière dans la structure subjectList_t en fonction des données de l'utilisateur*/
 void addNewSubject(subjectList_t *subjectList, char *subjectName, double subjectNote, double subjectScale)
@@ -54,23 +69,34 @@ void *deleteAllSubject(subjectList_t *start)
     return NULL;
 }
 
-/*
-void printListSubject(subjectList_t *subjectList)
+/*Permet d'afficher toutes les notes et les informations d'un étudiant*/
+void printListSubject(student_t *student)
 {
-    if (subjectList == NULL)
+    if (student == NULL)
     {
-        exit(EXIT_FAILURE);
+        fprintf(stdout, "-+-+-+-+-+-+-+ Veuillez créer des étudiants -+-+-+-+-+-+-+-+-\n");
     }
-
-    subject_t *actualSubject = subjectList->first;
-    fprintf(stdout,"-+-+-+-+-+-+-+ Début printListSubject-+-+-+-+-+-+-+-+-\n");
-    while (actualSubject != NULL)
+    else
     {
-        //fprintf(stdout,"prenom -> %s / nom -> %s / promotion -> %s / id : %d\n", actualSubject->student->firstname, actualSubject->student->lastname, actualSubject->student->promotion, actualSubject->student->id);
-        //fprintf(stdout,"Nom de matière -> %s / note -> %.2lf / coeff -> %.2lf\n", actualSubject->name, actualSubject->note, actualSubject->scale);
-        fprintf(stdout,"-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
-        actualSubject = actualSubject->next;
+        if (student->subjectList->first == NULL)
+        {
+            fprintf(stdout, "-+-+-+-+-+-+-+ Veuillez créer des notes -+-+-+-+-+-+-+-+-\n");
+        }
+        else
+        {
+            subject_t *actualSubject = student->subjectList->first;
+            fprintf(stdout, "-+-+-+-+-+-+-+ Début printListSubject-+-+-+-+-+-+-+-+-\n");
+            while (actualSubject != NULL)
+            {
+                fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d\n", student->firstname, student->lastname, student->promotion, student->id);
+                fprintf(stdout, "Nom de matière -> %s / note -> %.2lf / coeff -> %.2lf\n", actualSubject->name, actualSubject->note, actualSubject->scale);
+                if (actualSubject->next != NULL)
+                {
+                    fprintf(stdout, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
+                }
+                actualSubject = actualSubject->next;
+            }
+            fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListSubject-+-+-+-+-+-+-+-+-\n");
+        }
     }
-    fprintf(stdout,"-+-+-+-+-+-+-+ Fin printListSubject-+-+-+-+-+-+-+-+-\n");
 }
-*/
