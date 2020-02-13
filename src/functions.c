@@ -4,7 +4,9 @@
 void enterToContinue(void)
 {
     char *choix = malloc(3 * sizeof(char));
-    fgetsCheck(choix, "\nEnter to continue ", 3);
+
+    printf("Enter to continue : ");
+    fgets(choix, 3, stdin);
     free(choix);
     system("clear");
 }
@@ -22,23 +24,26 @@ void flushForFgetc(void)
 void fgetsCheck(char *input, char *message, unsigned int size)
 {
     char *positionEntree = NULL;
-    fprintf(stdout, "%s : ", message);
-    if (fgets(input, size, stdin) != NULL)
+    do
     {
-        positionEntree = strchr(input, '\n');
-        if (positionEntree != NULL)
+        fprintf(stdout, "%s : ", message);
+        if (fgets(input, size, stdin) != NULL)
         {
-            *positionEntree = '\0';
+            positionEntree = strchr(input, '\n');
+            if (positionEntree != NULL)
+            {
+                *positionEntree = '\0';
+            }
+            else
+            {
+                flushForFgetc();
+            }
         }
         else
         {
             flushForFgetc();
         }
-    }
-    else
-    {
-        flushForFgetc();
-    }
+    } while (strlen(input) < 1);
 }
 
 /*Verification de l'entrée de l'utilisateur afin de s'assurer qu'il s'agit bien d'un int*/
@@ -73,7 +78,7 @@ void menu(studentList_t *studentList)
     fprintf(stdout, "10 - Quitter\n");
     fprintf(stdout, "============================================\n");
     int choix;
-    char * inputUser=malloc(SIZE_MAX * sizeof(char));
+    char *inputUser = malloc(SIZE_MAX * sizeof(char));
     choix = verifInt();
     switch (choix)
     {
@@ -87,8 +92,8 @@ void menu(studentList_t *studentList)
         break;
     case 3:
         system("clear");
-//        fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
-      //  studentList = deleteSearchedStudent(studentList, searchStudent());
+        fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
+        printf("Tu viens de supprimer %s\n", deleteSpecificItem(&studentList, inputUser));
         break;
     case 4:
         system("clear");
@@ -96,7 +101,7 @@ void menu(studentList_t *studentList)
         break;
     case 5:
         system("clear");
-        createNewSubject(studentList);
+        //createNewSubject(studentList);
         break;
     case 6:
         system("clear");

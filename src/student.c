@@ -73,10 +73,6 @@ studentList_t *addNewStudent(studentList_t *studentList, student_t *student)
     return new;
   }
 
-  /* Insertion de l'élément au début de la liste */
-  //studentList->next = studentList;
-  //studentList->student = student;
-  //studentList->next->next=NULL;
 }
 
 /*Supprime et libère dans la mémoire le premier étudiant de studentList*/
@@ -136,7 +132,6 @@ studentList_t *search(studentList_t *studentList, char *etudiantName)
 
     if (strcmp((char *)currentList->student->firstname, etudiantName) == 0)
     {
-      printf("trouvé: %s", currentList->student->firstname);
       return currentList;
     }
     else
@@ -144,8 +139,7 @@ studentList_t *search(studentList_t *studentList, char *etudiantName)
       currentList = currentList->next;
     }
   }
-
-  printf("elt non trouvé");
+  printf("Eleve non trouvé\n");
   return NULL;
 }
 
@@ -154,33 +148,42 @@ void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
   studentList_t *studentToDisplay = search(studentList, etudiantName);
   if (studentToDisplay)
   {
-    printf("\ntrouvé encoure héhé");
-  }
-  else
-  {
-    printf("\nNooooope");
+    printf("ton gars c'est : %s %s %s\n", studentToDisplay->student->firstname, studentToDisplay->student->lastname, studentToDisplay->student->promotion);
   }
 }
 
-studentList_t *deleteSearchedStudent(studentList_t *studentList, char *etudiantName)
+char *deleteSpecificItem(studentList_t **studentList, char *val)
 {
-  studentList_t *studentToDelete = search(studentList, etudiantName);
-  if (studentToDelete)
+  if (!studentList || !(*studentList))
+    return "ERROR";
+
+  studentList_t *studentToDelete = *studentList;
+  studentList_t *tmp = NULL;
+
+  while (strcmp(studentToDelete->student->firstname, val) != 0 && studentToDelete->next != NULL)
   {
-    printf("trouvé: %s", studentToDelete->student->firstname);
-    
+    tmp = studentToDelete;
+    studentToDelete = studentToDelete->next;
+  }
+
+  if (strcmp(studentToDelete->student->firstname, val) == 0)
+  {
+    if (tmp)
+    {
+      tmp->next = studentToDelete->next;
+    }
+    else
+    {
+      *studentList = studentToDelete->next;
+    }
     free(studentToDelete->student->firstname);
     free(studentToDelete->student->lastname);
     free(studentToDelete->student->promotion);
-    deleteAllSubject(studentToDelete->student->subjectList);
+    //deleteAllSubject(studentToDelete->student->subjectList);
     free(studentToDelete->student);
+    free(studentToDelete);
+    return val;
+  }
 
-    studentToDelete = studentToDelete->next;
-    return studentToDelete;
-  }
-  else
-  {
-    printf("Nooooope");
-  }
-  return NULL;
+  return "NOPE";
 }
