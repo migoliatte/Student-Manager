@@ -10,6 +10,7 @@ studentList_t *studentInitialisation(void)
   }
   studentList->student = NULL;
   studentList->next = NULL;
+  studentList->nbr = 0;
   return studentList;
 }
 
@@ -43,8 +44,11 @@ studentList_t *createNewStudent(studentList_t *studentList)
   strcpy(student->firstname, studentFirstname);
   strcpy(student->lastname, studentLastname);
   strcpy(student->promotion, studentPromotion);
-  student->id = 0; // à changer en comptant les utilisateurs)
-  student->subjectList = subjectInitialisation();
+  if (studentList->student)
+  {
+    studentList->nbr = studentList->student->id;
+  }
+  student->id = studentList->nbr + 1;
 
   studentList = addNewStudent(studentList, student);
 
@@ -151,10 +155,12 @@ void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
 
 char *deleteSpecificItem(studentList_t **studentList, char *val)
 {
-  if (!studentList || !(*studentList))
-    return "ERROR";
 
   studentList_t *studentToDelete = *studentList;
+  if (studentToDelete->student == NULL)
+  {
+    return "Veuillez créer des étudiants ! ";
+  }
   studentList_t *tmp = NULL;
 
   while (strcmp(studentToDelete->student->firstname, val) != 0 && studentToDelete->next != NULL)
@@ -187,4 +193,37 @@ char *deleteSpecificItem(studentList_t **studentList, char *val)
 
 char *modifySpecificItem(studentList_t **studentList, char *val)
 {
+  studentList_t *studentList2 = *studentList;
+  studentList2 = studentList2;
+  val = val;
+  return "bonjour";
 }
+/*
+studentList_t *orderStudent(studentList_t *studentList)
+{ // ici on va ranger les elements dans l'ordre croisssant avant de les afficher.
+  studentList_t *temp, *temp1, *temp3;
+  char *min;
+  temp = studentList;
+  do
+  {
+    temp3 = temp;
+    min=temp->student->firstname;
+     for(temp1=temp->next ; temp1!=NULL ; temp1=temp1->next)
+     {
+        if(min > temp1->student->firstname)
+        {
+           temp3=temp1; // le 3è temporaire est l'adresse de l'élement où se trouve le minimum
+           min=temp3->student->firstname;
+        }
+     }
+     temp3->student->firstname=temp->student->firstname; //echange des 2 elements...
+    
+    //strcpy(temp->student->firstname,min);
+    //printf("min = %s",min);
+    //printf("temp->student->firstname = %s",temp->student->firstname);
+    printf("studentList->student->firstname = %s\n", temp->student->firstname);
+    temp = temp->next;
+  } while (temp->next != NULL);
+  return "bonjour";
+}
+*/

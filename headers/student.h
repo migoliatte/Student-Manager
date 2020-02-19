@@ -12,5 +12,6 @@ studentList_t *deleteSearchedStudent(studentList_t *studentList, char *etudiantN
 studentList_t *search(studentList_t *studentList, char *etudiantName);
 char *deleteSpecificItem(studentList_t **head, char *val);
 char *modifySpecificItem(studentList_t **studentList, char *val);
+studentList_t *orderStudent(studentList_t *studentList);
 
 #endif

@@ -10,6 +10,7 @@ subjectList_t *subjectInitialisation(void)
     }
     subjectList->next = NULL;
     subjectList->subject = NULL;
+    subjectList->nbr = 0;
     return subjectList;
 }
 
@@ -60,7 +61,11 @@ subjectList_t *createNewSubject(studentList_t *studentList)
         strcpy(subject->name, subjectName);
         subject->note = subjectNote;
         subject->scale = subjectScale;
-
+        if (studentList->student->subjectList->subject)
+        {
+            studentList->student->subjectList->nbr = studentList->student->subjectList->subject->id;
+        }
+        subject->id = studentList->student->subjectList->nbr + 1;
         studentList->student->subjectList = addNewSubject(studentList->student->subjectList, subject);
         free(subjectName);
         return studentList->student->subjectList;
@@ -82,7 +87,6 @@ subjectList_t *addNewSubject(subjectList_t *subjectList, subject_t *subject)
     else
     {
         subjectList_t *new = malloc(sizeof(subjectList_t));
-
         new->subject = subject;
         new->next = subjectList;
         return new;
@@ -138,7 +142,7 @@ void printListSubject(subjectList_t *subjectList)
             fprintf(stdout, "-+-+-+-+-+-+-+ Début printListSubject-+-+-+-+-+-+-+-+-\n");
             while (actualSubject->next)
             {
-                fprintf(stdout, "Nom de matière -> %s / note -> %.2lf / coeff -> %d\n", actualSubject->subject->name, actualSubject->subject->note, actualSubject->subject->scale);
+                fprintf(stdout, "id : %d , Nom de matière -> %s / note -> %.2lf / coeff -> %d\n", actualSubject->subject->id, actualSubject->subject->name, actualSubject->subject->note, actualSubject->subject->scale);
                 if (actualSubject->next->next)
                 {
                     fprintf(stdout, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
