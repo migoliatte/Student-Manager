@@ -5,7 +5,8 @@
 void enterToContinue(void);
 void flushForFgetc(void);
 void fgetsCheck(char *input, char *message, unsigned int size);
-int verifInt(void);
+int verifInt(char *message);
+double verifDouble(void);
 void menu(studentList_t *studentList);
 void allFree(studentList_t *studentList);
 

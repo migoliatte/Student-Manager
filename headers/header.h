@@ -3,21 +3,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE_MAX 10
-
-typedef struct subject_s
-{
-    char *name;
-    double note;
-    double scale;
-    struct subject_s *next;
-} subject_t;
+#include <ctype.h>
+#define SIZE_MAX 20
 
 typedef struct
 {
+    char *name;
+    double note;
+    int scale;
+} subject_t;
 
-    int nbrOfSubject;
-    subject_t *first;
+typedef struct subjectList_s
+{
+    subject_t *subject;
+    struct subjectList_s *next;
 } subjectList_t;
 
 typedef struct
@@ -27,7 +26,6 @@ typedef struct
     char *lastname;
     char *promotion;
     subjectList_t *subjectList;
-    //   struct student_s *next;
 } student_t;
 
 typedef struct studentList_s

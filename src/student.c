@@ -3,14 +3,14 @@
 /*Initialise la structure studentList_t*/
 studentList_t *studentInitialisation(void)
 {
-  studentList_t *liste = malloc(sizeof(*liste));
-  if (liste == NULL)
+  studentList_t *studentList = malloc(sizeof(*studentList));
+  if (studentList == NULL)
   {
     exit(EXIT_FAILURE);
   }
-  liste->student = NULL;
-  liste->next = NULL;
-  return liste;
+  studentList->student = NULL;
+  studentList->next = NULL;
+  return studentList;
 }
 
 /*Récuperation des informations de l'étudiant ajouté par l'utilisateur*/
@@ -21,7 +21,7 @@ studentList_t *createNewStudent(studentList_t *studentList)
   char *studentPromotion = malloc(SIZE_MAX * sizeof(char));
   if (studentFirstname == NULL || studentLastname == NULL || studentPromotion == NULL)
   {
-    printf("error");
+    printf("ATTENTION TU AS PLUS DE MEMOIRES");
   }
 
   fgetsCheck(studentFirstname, "Veuillez rentrer votre prénom", SIZE_MAX);
@@ -59,10 +59,7 @@ studentList_t *addNewStudent(studentList_t *studentList, student_t *student)
 {
   if (studentList == NULL)
   {
-    // exit(EXIT_FAILURE);
-    studentList->student = student;
-    studentList->next = NULL;
-    return studentList;
+    exit(EXIT_FAILURE);
   }
   else
   {
@@ -72,7 +69,6 @@ studentList_t *addNewStudent(studentList_t *studentList, student_t *student)
     new->next = studentList;
     return new;
   }
-
 }
 
 /*Supprime et libère dans la mémoire le premier étudiant de studentList*/
@@ -89,7 +85,7 @@ void deleteFirstStudent(studentList_t *studentList)
     free(toDelete->firstname);
     free(toDelete->lastname);
     free(toDelete->promotion);
-    deleteAllSubject(toDelete->subjectList);
+    deleteAllSubject(&toDelete->subjectList);
     studentList = studentList->next;
 
     free(toDelete);
@@ -149,6 +145,7 @@ void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
   if (studentToDisplay)
   {
     printf("ton gars c'est : %s %s %s\n", studentToDisplay->student->firstname, studentToDisplay->student->lastname, studentToDisplay->student->promotion);
+    printListSubject(studentToDisplay->student->subjectList);
   }
 }
 
@@ -179,11 +176,15 @@ char *deleteSpecificItem(studentList_t **studentList, char *val)
     free(studentToDelete->student->firstname);
     free(studentToDelete->student->lastname);
     free(studentToDelete->student->promotion);
-    //deleteAllSubject(studentToDelete->student->subjectList);
+    deleteAllSubject(&studentToDelete->student->subjectList);
     free(studentToDelete->student);
     free(studentToDelete);
     return val;
   }
 
   return "NOPE";
+}
+
+char *modifySpecificItem(studentList_t **studentList, char *val)
+{
 }
