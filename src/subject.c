@@ -10,7 +10,7 @@ subjectList_t *subjectInitialisation(void)
     }
     subjectList->next = NULL;
     subjectList->subject = NULL;
-    subjectList->nbr = 0;
+    //subjectList->nbr = 0;
     return subjectList;
 }
 
@@ -63,9 +63,9 @@ subjectList_t *createNewSubject(studentList_t *studentList)
         subject->scale = subjectScale;
         if (studentList->student->subjectList->subject)
         {
-            studentList->student->subjectList->nbr = studentList->student->subjectList->subject->id;
+         //   studentList->student->subjectList->nbr = studentList->student->subjectList->subject->id;
         }
-        subject->id = studentList->student->subjectList->nbr + 1;
+        //subject->id = studentList->student->subjectList->nbr + 1;
         studentList->student->subjectList = addNewSubject(studentList->student->subjectList, subject);
         free(subjectName);
         return studentList->student->subjectList;

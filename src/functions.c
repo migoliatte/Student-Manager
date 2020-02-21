@@ -114,11 +114,11 @@ void menu(studentList_t *studentList)
     {
     case 1:
         system("clear");
-        fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
-        //  if(strcmp(inputUser,"1")==0){
-        //printf("ton super order : %s",orderStudent(studentList));
-        //  }
-        printListStudent(studentList);
+    /*    fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
+          if(strcmp(inputUser,"1")==0){
+            printf("ton super order : %s\n",orderStudent(studentList));
+            }
+      */  printListStudent(studentList);
         break;
     case 2:
         system("clear");

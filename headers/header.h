@@ -16,7 +16,7 @@ typedef struct
 
 typedef struct subjectList_s
 {
-    int nbr;
+  //  int nbr;
     subject_t *subject;
     struct subjectList_s *next;
 } subjectList_t;
@@ -32,7 +32,7 @@ typedef struct
 
 typedef struct studentList_s
 {
-    int nbr;
+  //int nbr;
     student_t *student;
     struct studentList_s *next;
 } studentList_t;

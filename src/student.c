@@ -10,7 +10,7 @@ studentList_t *studentInitialisation(void)
   }
   studentList->student = NULL;
   studentList->next = NULL;
-  studentList->nbr = 0;
+  //studentList->nbr = 0;
   return studentList;
 }
 
@@ -44,12 +44,12 @@ studentList_t *createNewStudent(studentList_t *studentList)
   strcpy(student->firstname, studentFirstname);
   strcpy(student->lastname, studentLastname);
   strcpy(student->promotion, studentPromotion);
-  if (studentList->student)
+  /*if (studentList->student)
   {
     studentList->nbr = studentList->student->id;
   }
   student->id = studentList->nbr + 1;
-
+*/
   studentList = addNewStudent(studentList, student);
 
   free(studentFirstname);
@@ -198,32 +198,38 @@ char *modifySpecificItem(studentList_t **studentList, char *val)
   val = val;
   return "bonjour";
 }
+
 /*
-studentList_t *orderStudent(studentList_t *studentList)
+char *orderStudent(studentList_t *studentList)
 { // ici on va ranger les elements dans l'ordre croisssant avant de les afficher.
-  studentList_t *temp, *temp1, *temp3;
-  char *min;
-  temp = studentList;
-  do
+  if (studentList->next->student)
   {
-    temp3 = temp;
-    min=temp->student->firstname;
-     for(temp1=temp->next ; temp1!=NULL ; temp1=temp1->next)
-     {
-        if(min > temp1->student->firstname)
-        {
-           temp3=temp1; // le 3è temporaire est l'adresse de l'élement où se trouve le minimum
-           min=temp3->student->firstname;
-        }
-     }
-     temp3->student->firstname=temp->student->firstname; //echange des 2 elements...
-    
-    //strcpy(temp->student->firstname,min);
-    //printf("min = %s",min);
-    //printf("temp->student->firstname = %s",temp->student->firstname);
-    printf("studentList->student->firstname = %s\n", temp->student->firstname);
-    temp = temp->next;
-  } while (temp->next != NULL);
+    studentList_t *temp = studentList;
+    studentList_t *temp3=temp;
+    printf("studentList 1->firstname : %s , temp->firstname : %s\n", studentList->student->firstname, temp->student->firstname);
+    studentList_t *temp1;
+    char *toSwap = malloc(SIZE_MAX * sizeof(char));
+    if (toSwap == NULL)
+    {
+      exit(EXIT_FAILURE);
+    }
+    while (temp->next->next != NULL)
+    {
+      temp1 = temp->next;
+      printf("temp 1->firstname : %s , temp->firstname : %s\n", temp1->student->firstname, temp->student->firstname);
+      if (strcmp(temp->student->firstname, temp1->student->firstname) > 0)
+      {
+        strcpy(toSwap, temp->student->firstname);
+        strcpy(temp->student->firstname, temp1->student->firstname);
+        strcpy(temp1->student->firstname, toSwap);
+      }
+      temp = temp->next;
+    }
+    free(toSwap);
+
+    printListStudent(temp3);
+
+  }
   return "bonjour";
 }
 */
