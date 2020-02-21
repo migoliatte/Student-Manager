@@ -4,7 +4,6 @@
 void enterToContinue(void)
 {
     char *choix = malloc(3 * sizeof(char));
-
     printf("Enter to continue : ");
     fgets(choix, 3, stdin);
     free(choix);
@@ -47,21 +46,51 @@ void fgetsCheck(char *input, char *message, unsigned int size)
 }
 
 /*Verification de l'entrée de l'utilisateur afin de s'assurer qu'il s'agit bien d'un int*/
-int verifInt(void)
+int verifInt(char *message)
 {
     char *choix = malloc(3 * sizeof(char));
     do
     {
-        fgetsCheck(choix, "Veuillez choisir votre choix ", 3);
+        fgetsCheck(choix, message, 3);
         if (atoi(choix) < 1 || atoi(choix) > 11)
         {
-            fprintf(stdout, " >> Veuillez rentrer un chiffre entre 1 et 10 ! ");
+            fprintf(stdout, "Veuillez rentrer un int !");
         }
     } while (atoi(choix) < 1 || atoi(choix) > 11);
     int number = atoi(choix);
     free(choix);
     return number;
 }
+
+double verifDouble(void)
+{
+    char *choix = malloc(3 * sizeof(char));
+    double value;
+    char *endptr;
+    int isFloat = 1;
+    do
+    {
+        fgetsCheck(choix, "Veuillez choisir la note de l'étudiant ", 6);
+        if (choix == NULL)
+        {
+            return -1; /* Unexpected error */
+        }
+
+        value = strtod(choix, &endptr);
+        if (((*endptr == '\0') || (isspace(*endptr) != 0)) && value >= 0 && value <= 20)
+        {
+            isFloat = 0;
+            printf("It's a float %.1lf ...\n", value);
+        }
+        else
+        {
+            printf("It's NOT a float ...\n");
+        }
+    } while (isFloat);
+    free(choix);
+    return value;
+}
+
 
 /*Affiche et traite le menu*/
 void menu(studentList_t *studentList)
@@ -74,12 +103,15 @@ void menu(studentList_t *studentList)
     fprintf(stdout, "4 - Modifier un étudiant\n");
     fprintf(stdout, "5 - Ajouter une note aux étudiants\n");
     fprintf(stdout, "6 - Détail sur un étudiant\n");
-    fprintf(stdout, "7 - Lister les étudiants supprimés\n");
-    fprintf(stdout, "10 - Quitter\n");
+    fprintf(stdout, "7 - Lister les promotions\n");
+    fprintf(stdout, "8 - Lister les élèves d'une promotion particulière\n");
+    fprintf(stdout, "9 - Ajouter une note à une promotion particulière\n");
+    fprintf(stdout, "10 - Lister les moyennes par matières\n");
+    fprintf(stdout, "11 - Quitter\n");
     fprintf(stdout, "============================================\n");
     int choix;
     char *inputUser = malloc(SIZE_MAX * sizeof(char));
-    choix = verifInt();
+    choix = verifInt("Veuillez choisir votre choix :");
     switch (choix)
     {
     case 1:
@@ -101,7 +133,7 @@ void menu(studentList_t *studentList)
         break;
     case 5:
         system("clear");
-        //createNewSubject(studentList);
+        studentList = createNewSubjectForAllStudent(studentList);
         break;
     case 6:
         system("clear");
@@ -126,8 +158,8 @@ void menu(studentList_t *studentList)
 
 void allFree(studentList_t *studentList)
 {
-    if (studentList->student->subjectList->first->name != NULL)
-        free(studentList->student->subjectList->first->name);
+    if (studentList->student->subjectList->next->subject->name != NULL)
+        free(studentList->student->subjectList->next->subject->name);
 
     if (studentList->student->firstname != NULL)
         free(studentList->student->firstname);
@@ -139,7 +171,7 @@ void allFree(studentList_t *studentList)
         free(studentList->student->promotion);
 
     if (studentList->student->subjectList != NULL)
-        deleteAllSubject(studentList->student->subjectList);
+        deleteAllSubject(&studentList->student->subjectList);
 
     if (studentList != NULL)
         free(studentList);

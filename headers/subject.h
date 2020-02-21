@@ -3,10 +3,11 @@
 #include "header.h"
 
 subjectList_t *subjectInitialisation(void);
-void createNewSubject(studentList_t *studentList);
-void addNewSubject(subjectList_t *subjectList, char *subjectName, double subjectNote, double subjectScale);
-subject_t *deleteFirstSubject(subjectList_t *start);
-void *deleteAllSubject(subjectList_t *start);
-void printListSubject(student_t *student);
+studentList_t *createNewSubjectForAllStudent(studentList_t *studentList);
+subjectList_t *createNewSubject(studentList_t *studentList);
+subjectList_t *addNewSubject(subjectList_t *subjectList, subject_t *subject);
+void deleteFirstSubject(subjectList_t *subjectList);
+void deleteAllSubject(subjectList_t **subjectList);
+void printListSubject(subjectList_t *subjectList);
 
 #endif

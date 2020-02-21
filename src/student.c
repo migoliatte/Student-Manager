@@ -10,6 +10,7 @@ studentList_t *studentInitialisation(void)
   }
   liste->student = NULL;
   liste->next = NULL;
+  liste->nbr = 0;
   return liste;
 }
 
@@ -43,8 +44,12 @@ studentList_t *createNewStudent(studentList_t *studentList)
   strcpy(student->firstname, studentFirstname);
   strcpy(student->lastname, studentLastname);
   strcpy(student->promotion, studentPromotion);
-  student->id = 0; // à changer en comptant les utilisateurs)
   student->subjectList = subjectInitialisation();
+  if (studentList->student)
+  {
+    studentList->nbr = studentList->student->id;
+  }
+  student->id = studentList->nbr + 1;
 
   studentList = addNewStudent(studentList, student);
 
@@ -72,7 +77,6 @@ studentList_t *addNewStudent(studentList_t *studentList, student_t *student)
     new->next = studentList;
     return new;
   }
-
 }
 
 /*Supprime et libère dans la mémoire le premier étudiant de studentList*/
@@ -89,7 +93,7 @@ void deleteFirstStudent(studentList_t *studentList)
     free(toDelete->firstname);
     free(toDelete->lastname);
     free(toDelete->promotion);
-    deleteAllSubject(toDelete->subjectList);
+    deleteAllSubject(&toDelete->subjectList);
     studentList = studentList->next;
 
     free(toDelete);
@@ -149,6 +153,7 @@ void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
   if (studentToDisplay)
   {
     printf("ton gars c'est : %s %s %s\n", studentToDisplay->student->firstname, studentToDisplay->student->lastname, studentToDisplay->student->promotion);
+    printListSubject(studentToDisplay->student->subjectList);
   }
 }
 
