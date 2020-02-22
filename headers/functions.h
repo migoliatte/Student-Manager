@@ -9,5 +9,8 @@ int verifInt(char *message);
 double verifDouble(void);
 void menu(studentList_t *studentList);
 void allFree(studentList_t *studentList);
-
+void freeDoubleChar(char ***ptab, int N);
+char **initDoubleChar(int N, int M);
+int freeDoubleInt(int ***ptab, int N);
+int **initDoubleInt(int N, int M);
 #endif

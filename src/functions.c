@@ -91,6 +91,65 @@ double verifDouble(void)
     return value;
 }
 
+char **initDoubleChar(int N, int M)
+{
+    char **tab;
+    int i;
+    int j;
+    tab = malloc(N * sizeof(*tab));
+    for (i = 0; i < N; i++)
+    {
+        tab[i] = malloc(M * sizeof(*tab[i]));
+        for (j = 0; j < M; j++)
+        {
+            strcpy(tab[i],"");
+        }
+    }
+    return tab;
+}
+
+void freeDoubleChar(char ***ptab, int N)
+{
+    if (ptab)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            free(ptab[0][i]);
+        }
+    }
+    free(*ptab);
+    *ptab = NULL;
+}
+
+int **initDoubleInt(int N, int M)
+{
+    int **tab;
+    int i;
+    int j;
+    tab = malloc(N * sizeof(*tab));
+    for (i = 0; i < N; i++)
+    {
+        tab[i] = malloc(M * sizeof(*tab[i]));
+        for (j = 0; j < M; j++)
+        {
+            tab[i]=0;
+        }
+    }
+    return tab;
+}
+
+int freeDoubleInt(int ***ptab, int N)
+{
+    if (ptab)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            free(ptab[0][i]);
+        }
+    }
+    free(*ptab);
+    *ptab = NULL;
+}
 
 /*Affiche et traite le menu*/
 void menu(studentList_t *studentList)
@@ -125,7 +184,7 @@ void menu(studentList_t *studentList)
     case 3:
         system("clear");
         fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
-        printf("Tu viens de supprimer %s\n", deleteSpecificItem(&studentList, inputUser));
+        deleteSpecificItem(&studentList, inputUser);
         break;
     case 4:
         system("clear");
@@ -142,7 +201,13 @@ void menu(studentList_t *studentList)
         break;
     case 7:
         system("clear");
-        // listStudentDeleted(studentList);
+        //fgetsCheck(inputUser, "tu cherches quelle promotion ?", SIZE_MAX);
+        listOnePromotion(studentList, inputUser, 2);
+        break;
+    case 8:
+        system("clear");
+        fgetsCheck(inputUser, "tu cherches quelle promotion ?", SIZE_MAX);
+        listOnePromotion(studentList, inputUser, 3);
         break;
     case 10:
         printf("bonjour %d", SIZE_MAX);

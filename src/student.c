@@ -45,14 +45,18 @@ studentList_t *createNewStudent(studentList_t *studentList)
   strcpy(student->lastname, studentLastname);
   strcpy(student->promotion, studentPromotion);
   student->subjectList = subjectInitialisation();
+
+  student->id = studentList->nbr + 1;
+  printf("studentList->nbr = %d", studentList->nbr);
+  printf("  << student->id = %d\n", student->id);
+
+  studentList = addNewStudent(studentList, student);
   if (studentList->student)
   {
     studentList->nbr = studentList->student->id;
   }
-  student->id = studentList->nbr + 1;
-
-  studentList = addNewStudent(studentList, student);
-
+  printf("studentList->nbr = %d", studentList->nbr);
+  printf("  << student->id = %d\n", student->id);
   free(studentFirstname);
   free(studentLastname);
   free(studentPromotion);
@@ -152,15 +156,16 @@ void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
   studentList_t *studentToDisplay = search(studentList, etudiantName);
   if (studentToDisplay)
   {
-    printf("ton gars c'est : %s %s %s\n", studentToDisplay->student->firstname, studentToDisplay->student->lastname, studentToDisplay->student->promotion);
+    printf("L'élève recherché est : %s %s %s\n", studentToDisplay->student->firstname, studentToDisplay->student->lastname, studentToDisplay->student->promotion);
     printListSubject(studentToDisplay->student->subjectList);
   }
 }
 
 char *deleteSpecificItem(studentList_t **studentList, char *val)
 {
-  if (!studentList || !(*studentList))
-    return "ERROR";
+  if (!(*studentList)->student){
+    return "-+-+-+-+-+-+-+ Veuillez créer des étudiants -+-+-+-+-+-+-+-+-\n";
+  }
 
   studentList_t *studentToDelete = *studentList;
   studentList_t *tmp = NULL;
@@ -184,11 +189,72 @@ char *deleteSpecificItem(studentList_t **studentList, char *val)
     free(studentToDelete->student->firstname);
     free(studentToDelete->student->lastname);
     free(studentToDelete->student->promotion);
-    //deleteAllSubject(studentToDelete->student->subjectList);
+    deleteAllSubject(&studentToDelete->student->subjectList);
     free(studentToDelete->student);
     free(studentToDelete);
+    strcat(val," vient d'être supprimé\n");
     return val;
   }
-
   return "NOPE";
+}
+
+void listOnePromotion(studentList_t *studentList, char *namePromotion, int type)
+{
+  char **nameOfPromotion = initDoubleChar(studentList->nbr, SIZE_MAX);
+  int exist = 0;
+  int i = 0;
+  int j = 0;
+  if (studentList == NULL)
+  {
+    exit(EXIT_FAILURE);
+  }
+
+  if (studentList->student == NULL)
+  {
+    fprintf(stdout, "-+-+-+-+-+-+-+ Veuillez créer des étudiants -+-+-+-+-+-+-+-+-\n");
+  }
+  else
+  {
+    studentList_t *currentList = studentList;
+    fprintf(stdout, "-+-+-+-+-+-+-+ Début printListStudent-+-+-+-+-+-+-+-+-\n");
+
+    while (currentList->next)
+    {
+      if (type == 1)
+      {
+        fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", currentList->student->firstname, currentList->student->lastname, currentList->student->promotion, currentList->student->id);
+      }
+      else if (type == 2)
+      {
+        for (i = 0; i < studentList->nbr; i++)
+        {
+          if (strcmp(nameOfPromotion[i], currentList->student->promotion) == 0)
+          {
+            exist = 1;
+          }
+        }
+        if (exist == 0)
+        {
+          fprintf(stdout, " promotion -> %s\n", currentList->student->promotion);
+          strcpy(nameOfPromotion[j], currentList->student->promotion);
+          j++;
+        }
+        exist = 0;
+      }
+      else if (type == 3)
+      {
+        if (strcmp(currentList->student->promotion, namePromotion) == 0)
+        {
+          fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", currentList->student->firstname, currentList->student->lastname, currentList->student->promotion, currentList->student->id);
+        }
+      }
+      if (currentList->next->next)
+      {
+        fprintf(stdout, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
+      }
+      currentList = currentList->next;
+    }
+    fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
+  }
+  freeDoubleChar(&nameOfPromotion, studentList->nbr);
 }
