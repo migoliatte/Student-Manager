@@ -10,4 +10,7 @@ void deleteFirstSubject(subjectList_t *subjectList);
 void deleteAllSubject(subjectList_t **subjectList);
 void printListSubject(subjectList_t *subjectList);
 
+void printListSubjectForModification(subjectList_t *subjectList);
+char *modificationSubject(subjectList_t *subjectList, int choice);
+
 #endif

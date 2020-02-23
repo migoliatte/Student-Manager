@@ -1,1 +1,1 @@
-gcc -Wall -Wextra -x c -o .\bin\prog.exe .\src\main.c ./src/functions.c ./src/student.c ./src/subject.c
+gcc -Wall -Wextra -x c -o .\bin\prog.exe .\src\main.c ./src/functions.c ./src/student.c ./src/subject.c ./src/save.c

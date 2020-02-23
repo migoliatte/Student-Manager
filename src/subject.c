@@ -139,53 +139,159 @@ void printListSubject(subjectList_t *subjectList)
         }
         else
         {
-            int *notes = malloc(subjectList->nbr * sizeof(int));
-            int *scale = malloc(subjectList->nbr * sizeof(int));
-            char *name = initDoubleChar(subjectList->nbr, SIZE_MAX);
+
+            printf("\n subjectList->nbr = %d \n", subjectList->nbr);
+            double *notes = malloc(10 * subjectList->nbr * sizeof(int));
+            int *scale = malloc(10 * subjectList->nbr * sizeof(int));
+            char **name = initDoubleChar(10 * subjectList->nbr, SIZE_MAX);
             int i = 0;
-            int z = 0;
             int exist = 0;
-            int moyenneAll = 0;
-            char **nameList = initDoubleChar(subjectList->nbr, SIZE_MAX);
-            int **moyenneByName = initDoubleInt(subjectList->nbr, SIZE_MAX);
-            int x=0;
+            double moyenneAll = 0;
+            int dividend = 0;
+            int *nbrOfEach = malloc(10 * subjectList->nbr * sizeof(int));
+            char **nameList = initDoubleChar(10 * subjectList->nbr, SIZE_MAX);
+            double *moyenneByName = malloc(10 * subjectList->nbr * sizeof(double));
+            int x = 0;
+            for (int a = 0; a < subjectList->nbr; a++)
+            {
+                notes[a] = 0;
+                nbrOfEach[a] = 0;
+                scale[a] = 0;
+                moyenneByName[a] = 0;
+            }
             subjectList_t *actualSubject = subjectList;
-            fprintf(stdout, "-+-+-+-+-+-+-+ Début printListSubject-+-+-+-+-+-+-+-+-\n");
+            fprintf(stdout, "-+-+-+-+-+-+-+ Début Affichage globale-+-+-+-+-+-+-+-+-\n");
             while (actualSubject->next)
             {
+                fprintf(stdout, "id : %d , Nom de matière -> %s / note -> %.2lf / coeff -> %d\n", actualSubject->subject->id, actualSubject->subject->name, actualSubject->subject->note, actualSubject->subject->scale);
                 notes[i] = actualSubject->subject->note;
                 scale[i] = actualSubject->subject->scale;
                 strcpy(name[i], actualSubject->subject->name);
+                fprintf(stdout, "notes[i] : %2lf , scale[i] -> %d / name[i] -> %s \n", notes[i], scale[i], name[i]);
                 i++;
-                fprintf(stdout, "id : %d , Nom de matière -> %s / note -> %.2lf / coeff -> %d\n", actualSubject->subject->id, actualSubject->subject->name, actualSubject->subject->note, actualSubject->subject->scale);
                 if (actualSubject->next->next)
                 {
                     fprintf(stdout, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
                 }
                 actualSubject = actualSubject->next;
             }
+            fprintf(stdout, "-+-+-+-+-+-+-+ Fin Affichage globale-+-+-+-+-+-+-+-+-\n");
+            fprintf(stdout, "-+-+-+-+-+-+-+ Début Moyenne générale + Moyenne par matière-+-+-+-+-+-+-+-+-\n");
+
             for (int j = 0; j < i; j++)
             {
                 moyenneAll += notes[j] * scale[j];
-                for (z = 0; z < j; z++)
+                dividend += 1 * scale[j];
+                printf("j = %d , moyenneAll = %.2lf, dividend = %d \n", j, moyenneAll, dividend);
+                for (int z = 0; z < j; z++)
                 {
-                    if (strcmp(name[z],nameList[z]) == 0)
+                    if (strcmp(name[j], nameList[z]) == 0)
                     {
                         exist = 1;
-                        moyenneByName[z]+=notes[j] * scale[j];
+                        nbrOfEach[z] += 1 * scale[j];
+                        moyenneByName[z] += notes[j] * scale[j];
+                        printf("j = %d , z = %d, name = %s , nameList = %s , nbrOfEach = %d, moyenneByName = %.2lf \n", j, z, name[j], nameList[z], nbrOfEach[z], moyenneByName[z]);
                     }
                 }
                 if (exist == 0)
                 {
-                    fprintf(stdout, " name -> %s\n", subjectList->subject->name);
-                    strcpy(nameList[z], name[j]);
+                    moyenneByName[x] += notes[j] * scale[j];
+                    strcpy(nameList[x], name[j]);
+                    nbrOfEach[x] += 1 * scale[j];
+                    printf("j = %d , name = %s , nameList = %s , nbrOfEach = %d, moyenneByName = %.2lf \n", j, name[j], nameList[x], nbrOfEach[x], moyenneByName[x]);
                     x++;
                 }
                 exist = 0;
             }
-            fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListSubject-+-+-+-+-+-+-+-+-\n");
-            freeDoubleChar(name, subjectList->nbr);
-            freeDoubleInt(&moyenneByName, subjectList->nbr);
+
+            printf("(moyenneAll = %.2lf) / (dividend = %d )", moyenneAll, dividend);
+
+            fprintf(stdout, "Moyenne de l'eleve : %lf\n", moyenneAll);
+            for (int z = 0; z < x; z++)
+            {
+
+                fprintf(stdout, "Moyenne de l'eleve dans la matiere : %s est : %.2lf\n", name[z], moyenneByName[z] / nbrOfEach[z]);
+            }
+            fprintf(stdout, "-+-+-+-+-+-+-+ Fin Moyenne générale + Moyenne par matière-+-+-+-+-+-+-+-+-\n");
+
+            moyenneAll /= dividend;
+            printf(" = moyenneAll = %.2lf  \n", moyenneAll);
+            free(notes);
+            free(scale);
+            free(moyenneByName);
+            free(nbrOfEach);
+            freeDoubleChar(&name, subjectList->nbr);
+            freeDoubleChar(&nameList, subjectList->nbr);
         }
     }
+}
+
+void printListSubjectForModification(subjectList_t *subjectList)
+{
+    int choice;
+    if (subjectList == NULL)
+    {
+        fprintf(stdout, "-+-+-+-+-+-+-+ Cet étudiant n'a pas de notes -+-+-+-+-+-+-+-+-\n");
+    }
+    else
+    {
+        if (subjectList->subject == NULL)
+        {
+            fprintf(stdout, "-+-+-+-+-+-+-+ Veuillez créer des notes -+-+-+-+-+-+-+-+-\n");
+        }
+        else
+        {
+            subjectList_t *actualSubject = subjectList;
+            fprintf(stdout, "-+-+-+-+-+-+-+ Début printListSubject-+-+-+-+-+-+-+-+-\n");
+            while (actualSubject->next)
+            {
+                fprintf(stdout, "Id = %d \n", actualSubject->subject->id);
+                fprintf(stdout, "Nom de matière -> %s \n", actualSubject->subject->name);
+                fprintf(stdout, "Note -> %.2lf \n", actualSubject->subject->note);
+                fprintf(stdout, "Coeff -> %d\n", actualSubject->subject->scale);
+
+                if (actualSubject->next->next)
+                {
+                    fprintf(stdout, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
+                }
+                actualSubject = actualSubject->next;
+            }
+            fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListSubject-+-+-+-+-+-+-+-+-\n");
+        }
+    }
+
+    choice = verifInt("Quelle note voulez vous modifiez ? Choisissez un ID : ");
+    modificationSubject(subjectList, choice);
+}
+
+char *modificationSubject(subjectList_t *subjectList, int choice)
+{
+
+    char *replaceName = malloc(SIZE_MAX * sizeof(char));
+
+    subjectList_t *actualSubject = subjectList;
+    while (actualSubject->next)
+    {
+        if (actualSubject->subject->id == choice)
+        {
+
+            //matière
+            fgetsCheck(replaceName, "Le nom de la nouvelle matière : \n", SIZE_MAX);
+            strcpy(actualSubject->subject->name, replaceName);
+            printf("Le nom a été modifié \n");
+
+            //note
+            double note = verifDouble();
+            actualSubject->subject->note = note;
+            printf("La note a été modifié \n");
+
+            //coeff
+            int newCoeff = verifInt("Le nouveau coeff est  : ");
+            actualSubject->subject->scale = newCoeff;
+            printf("Le coeff a été modifié \n");
+        }
+        actualSubject = actualSubject->next;
+    }
+
+    return "test";
 }

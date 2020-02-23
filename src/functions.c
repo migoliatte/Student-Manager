@@ -102,7 +102,7 @@ char **initDoubleChar(int N, int M)
         tab[i] = malloc(M * sizeof(*tab[i]));
         for (j = 0; j < M; j++)
         {
-            strcpy(tab[i],"");
+            strcpy(tab[i], "");
         }
     }
     return tab;
@@ -132,13 +132,43 @@ int **initDoubleInt(int N, int M)
         tab[i] = malloc(M * sizeof(*tab[i]));
         for (j = 0; j < M; j++)
         {
-            tab[i]=0;
+            tab[i] = 0;
         }
     }
     return tab;
 }
 
-int freeDoubleInt(int ***ptab, int N)
+void freeDoubleInt(int ***ptab, int N)
+{
+    if (ptab)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            free(ptab[0][i]);
+        }
+    }
+    free(*ptab);
+    *ptab = NULL;
+}
+
+double **initDoubleDouble(int N, int M)
+{
+    double **tab;
+    int i;
+    int j;
+    tab = malloc(N * sizeof(*tab));
+    for (i = 0; i < N; i++)
+    {
+        tab[i] = malloc(M * sizeof(*tab[i]));
+        for (j = 0; j < M; j++)
+        {
+            tab[i] = 0;
+        }
+    }
+    return tab;
+}
+
+void freeDoubleDouble(double ***ptab, int N)
 {
     if (ptab)
     {
@@ -166,7 +196,8 @@ void menu(studentList_t *studentList)
     fprintf(stdout, "8 - Lister les élèves d'une promotion particulière\n");
     fprintf(stdout, "9 - Ajouter une note à une promotion particulière\n");
     fprintf(stdout, "10 - Lister les moyennes par matières\n");
-    fprintf(stdout, "11 - Quitter\n");
+    fprintf(stdout, "11 - Charger sauvegarde\n");
+    fprintf(stdout, "12 - Quitter\n");
     fprintf(stdout, "============================================\n");
     int choix;
     char *inputUser = malloc(SIZE_MAX * sizeof(char));
@@ -184,11 +215,12 @@ void menu(studentList_t *studentList)
     case 3:
         system("clear");
         fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
-        deleteSpecificItem(&studentList, inputUser);
+        printf(": %s \n", deleteSpecificItem(&studentList, inputUser));
         break;
     case 4:
         system("clear");
-        // modifyStudent(studentList);
+        fgetsCheck(inputUser, "tu veux modifier qui ?", SIZE_MAX);
+        displaySearchedStudentForModification(studentList, inputUser);
         break;
     case 5:
         system("clear");
@@ -201,7 +233,6 @@ void menu(studentList_t *studentList)
         break;
     case 7:
         system("clear");
-        //fgetsCheck(inputUser, "tu cherches quelle promotion ?", SIZE_MAX);
         listOnePromotion(studentList, inputUser, 2);
         break;
     case 8:
@@ -209,8 +240,19 @@ void menu(studentList_t *studentList)
         fgetsCheck(inputUser, "tu cherches quelle promotion ?", SIZE_MAX);
         listOnePromotion(studentList, inputUser, 3);
         break;
+    case 9:
+        system("clear");
+        break;
     case 10:
-        printf("bonjour %d", SIZE_MAX);
+        system("clear");
+        break;
+    case 11:
+        system("clear");
+        fgetsCheck(inputUser, "Donne moi le nom du fichier avec l'extension :", SIZE_MAX);
+        chargeFile(inputUser);
+        break;
+    case 12:
+        checkSauvegarde(studentList, verifInt("Voulez vous vraiment fermer le programme sans sauvaugarder ? \n 1 pour sauv et 2 pour quitter :"));
         return;
     default:
         system("clear");

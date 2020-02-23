@@ -163,10 +163,14 @@ void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
 
 char *deleteSpecificItem(studentList_t **studentList, char *val)
 {
-  if (!(*studentList)->student){
+  if (!(*studentList)->student)
+  {
     return "-+-+-+-+-+-+-+ Veuillez créer des étudiants -+-+-+-+-+-+-+-+-\n";
   }
-
+  if ((*studentList)->student == NULL)
+  {
+    printf("veuillez créer des étudiants !\n");
+  }
   studentList_t *studentToDelete = *studentList;
   studentList_t *tmp = NULL;
 
@@ -192,12 +196,11 @@ char *deleteSpecificItem(studentList_t **studentList, char *val)
     deleteAllSubject(&studentToDelete->student->subjectList);
     free(studentToDelete->student);
     free(studentToDelete);
-    strcat(val," vient d'être supprimé\n");
+    strcat(val, " vient d'être supprimé\n");
     return val;
   }
   return "NOPE";
 }
-
 void listOnePromotion(studentList_t *studentList, char *namePromotion, int type)
 {
   char **nameOfPromotion = initDoubleChar(studentList->nbr, SIZE_MAX);
@@ -257,4 +260,62 @@ void listOnePromotion(studentList_t *studentList, char *namePromotion, int type)
     fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
   }
   freeDoubleChar(&nameOfPromotion, studentList->nbr);
+}
+
+void displaySearchedStudentForModification(studentList_t *studentList, char *etudiantName)
+{
+  studentList_t *studentToDisplay = search(studentList, etudiantName);
+  int choice;
+  if (studentToDisplay)
+  {
+    printf("1) Le Prénom de l'Etudiant est : %s \n", studentToDisplay->student->firstname);
+    printf("2) Le Nom de l'Etudiant est : %s \n", studentToDisplay->student->lastname);
+    printf("3) Sa promotion : %s  \n", studentToDisplay->student->promotion);
+    printf("4) Pour modifier ses notes \n");
+
+    printf("Que voulais vous modifier entrez votre choix qui doit être une des nombres de la list : \n");
+    scanf("%d", &choice);
+    modificationList(&studentToDisplay, choice);
+  }
+}
+
+char *modificationList(studentList_t **studentList, int choice)
+{
+
+  char *replace = malloc(SIZE_MAX * sizeof(char));
+
+  studentList_t *studentModif = *studentList;
+  if (studentModif->student == NULL)
+  {
+    return "PAS DETUDIANT";
+  }
+  //studentList_t *tmp = NULL;
+
+  if (choice == 1)
+  {
+
+    fgetsCheck(replace, "Le nouveau Prénom de l'Eleve : \n", SIZE_MAX);
+    strcpy(studentModif->student->firstname, replace);
+    printf("Le prenom a été modifié \n");
+  }
+  else if (choice == 2)
+  {
+
+    fgetsCheck(replace, "Le nouveau Nom de l'Eleve : \n", SIZE_MAX);
+    strcpy(studentModif->student->lastname, replace);
+    printf("Le nom a été modifié \n");
+  }
+  else if (choice == 3)
+  {
+
+    fgetsCheck(replace, "Le nouveau Promo de l'Eleve : \n", SIZE_MAX);
+    strcpy(studentModif->student->promotion, replace);
+    printf("La pormo a été modifié \n");
+  }
+  else if (choice == 4)
+  {
+    printListSubjectForModification(studentModif->student->subjectList);
+  }
+
+  return "fait";
 }
