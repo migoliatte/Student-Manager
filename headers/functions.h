@@ -15,4 +15,9 @@ void freeDoubleInt(int ***ptab, int N);
 int **initDoubleInt(int N, int M);
 double **initDoubleDouble(int N, int M);
 void freeDoubleDouble(double ***ptab, int N);
+
+studentList_t *initForTest(studentList_t *studentList);
+studentList_t *easyAddStudent(studentList_t *studentList, char *name);
+studentList_t *easyAddSubject(studentList_t *studentList, char *name, double note);
+
 #endif

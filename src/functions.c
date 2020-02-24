@@ -52,11 +52,11 @@ int verifInt(char *message)
     do
     {
         fgetsCheck(choix, message, 3);
-        if (atoi(choix) < 1 || atoi(choix) > 11)
+        if (atoi(choix) < 1 || atoi(choix) > 20)
         {
             fprintf(stdout, "Veuillez rentrer un int !");
         }
-    } while (atoi(choix) < 1 || atoi(choix) > 11);
+    } while (atoi(choix) < 1 || atoi(choix) > 20);
     int number = atoi(choix);
     free(choix);
     return number;
@@ -80,11 +80,10 @@ double verifDouble(void)
         if (((*endptr == '\0') || (isspace(*endptr) != 0)) && value >= 0 && value <= 20)
         {
             isFloat = 0;
-            printf("It's a float %.1lf ...\n", value);
         }
         else
         {
-            printf("It's NOT a float ...\n");
+            printf("veuillez rentrer un float ! ...\n");
         }
     } while (isFloat);
     free(choix);
@@ -201,12 +200,13 @@ void menu(studentList_t *studentList)
     fprintf(stdout, "============================================\n");
     int choix;
     char *inputUser = malloc(SIZE_MAX * sizeof(char));
+    int inputInt = 0;
     choix = verifInt("Veuillez choisir votre choix :");
     switch (choix)
     {
     case 1:
         system("clear");
-        printListStudent(studentList);
+        allTypeOfDisplayStudent(studentList, "", 1);
         break;
     case 2:
         system("clear");
@@ -214,13 +214,13 @@ void menu(studentList_t *studentList)
         break;
     case 3:
         system("clear");
-        fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
-        printf(": %s \n", deleteSpecificItem(&studentList, inputUser));
+        inputInt = verifInt("Suppression de l'élève numéro : ");
+        printf("%s \n", deleteSpecificItem(&studentList, inputInt));
         break;
     case 4:
         system("clear");
-        fgetsCheck(inputUser, "tu veux modifier qui ?", SIZE_MAX);
-        displaySearchedStudentForModification(studentList, inputUser);
+        inputInt = verifInt("Modification de l'élève numéro : ");
+        displaySearchedStudentForModification(studentList, inputInt);
         break;
     case 5:
         system("clear");
@@ -228,23 +228,26 @@ void menu(studentList_t *studentList)
         break;
     case 6:
         system("clear");
-        fgetsCheck(inputUser, "tu cherches qui ?", SIZE_MAX);
-        displaySearchedStudent(studentList, inputUser);
+        inputInt = verifInt("Détails de l'élève numéro : ");
+        displaySearchedStudent(studentList, inputInt);
         break;
     case 7:
         system("clear");
-        listOnePromotion(studentList, inputUser, 2);
+        allTypeOfDisplayStudent(studentList, inputUser, 2);
         break;
     case 8:
         system("clear");
         fgetsCheck(inputUser, "tu cherches quelle promotion ?", SIZE_MAX);
-        listOnePromotion(studentList, inputUser, 3);
+        allTypeOfDisplayStudent(studentList, inputUser, 3);
         break;
     case 9:
         system("clear");
+        fgetsCheck(inputUser, "tu cherches quelle promotion ?", SIZE_MAX);
+        insertNoteForOnePromotion(studentList, inputUser);
         break;
     case 10:
         system("clear");
+        printAllMoyenneBySubject(studentList);
         break;
     case 11:
         system("clear");
@@ -283,3 +286,62 @@ void allFree(studentList_t *studentList)
     if (studentList != NULL)
         free(studentList);
 }
+
+studentList_t *easyAddSubject(studentList_t *studentList, char *name, double note)
+{
+    subject_t *subject = malloc(sizeof(*subject));
+
+    subject->name = malloc(SIZE_MAX * sizeof(char));
+    strcpy(subject->name, name);
+    subject->note = note;
+    subject->scale = 2;
+    subject->id = studentList->student->subjectList->nbr + 1;
+    studentList->student->subjectList = addNewSubject(studentList->student->subjectList, subject);
+    if (studentList->student->subjectList->subject)
+    {
+        studentList->student->subjectList->nbr = studentList->student->subjectList->subject->id;
+    }
+
+    return studentList;
+}
+studentList_t *easyAddStudent(studentList_t *studentList, char *name)
+{
+    student_t *student = malloc(sizeof(*student));
+
+    student->firstname = malloc(SIZE_MAX * sizeof(char));
+    student->lastname = malloc(SIZE_MAX * sizeof(char));
+    student->promotion = malloc(SIZE_MAX * sizeof(char));
+    strcpy(student->firstname, name);
+    strcpy(student->lastname, name);
+    strcpy(student->promotion, name);
+
+    student->subjectList = subjectInitialisation();
+    student->id = studentList->nbr + 1;
+    studentList = addNewStudent(studentList, student);
+    if (studentList->student)
+    {
+        studentList->nbr = studentList->student->id;
+    }
+    return studentList;
+}
+
+studentList_t *initForTest(studentList_t *studentList)
+{
+
+    studentList = easyAddStudent(studentList, "val");
+    studentList = easyAddSubject(studentList, "math", 2);
+    studentList = easyAddSubject(studentList, "français", 4);
+    studentList = easyAddSubject(studentList, "math", 6);
+        studentList = easyAddStudent(studentList, "mac");
+
+    studentList = easyAddSubject(studentList, "truc", 12);
+    studentList = easyAddSubject(studentList, "français", 13);
+    studentList = easyAddSubject(studentList, "truc", 17);
+            studentList = easyAddStudent(studentList, "gana");
+
+    studentList = easyAddSubject(studentList, "math", 20);
+    studentList = easyAddSubject(studentList, "machin", 1);
+
+    return studentList;
+}
+

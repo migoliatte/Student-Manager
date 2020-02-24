@@ -47,16 +47,12 @@ studentList_t *createNewStudent(studentList_t *studentList)
   student->subjectList = subjectInitialisation();
 
   student->id = studentList->nbr + 1;
-  printf("studentList->nbr = %d", studentList->nbr);
-  printf("  << student->id = %d\n", student->id);
 
   studentList = addNewStudent(studentList, student);
   if (studentList->student)
   {
     studentList->nbr = studentList->student->id;
   }
-  printf("studentList->nbr = %d", studentList->nbr);
-  printf("  << student->id = %d\n", student->id);
   free(studentFirstname);
   free(studentLastname);
   free(studentPromotion);
@@ -132,13 +128,13 @@ void printListStudent(studentList_t *studentList)
   }
 }
 
-studentList_t *search(studentList_t *studentList, char *etudiantName)
+studentList_t *search(studentList_t *studentList, int etudiantId)
 {
   studentList_t *currentList = studentList;
   while (currentList->next)
   {
 
-    if (strcmp((char *)currentList->student->firstname, etudiantName) == 0)
+    if (currentList->student->id == etudiantId)
     {
       return currentList;
     }
@@ -151,9 +147,9 @@ studentList_t *search(studentList_t *studentList, char *etudiantName)
   return NULL;
 }
 
-void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
+void displaySearchedStudent(studentList_t *studentList, int etudiantId)
 {
-  studentList_t *studentToDisplay = search(studentList, etudiantName);
+  studentList_t *studentToDisplay = search(studentList, etudiantId);
   if (studentToDisplay)
   {
     printf("L'élève recherché est : %s %s %s\n", studentToDisplay->student->firstname, studentToDisplay->student->lastname, studentToDisplay->student->promotion);
@@ -161,7 +157,7 @@ void displaySearchedStudent(studentList_t *studentList, char *etudiantName)
   }
 }
 
-char *deleteSpecificItem(studentList_t **studentList, char *val)
+char *deleteSpecificItem(studentList_t **studentList, int etudiantId)
 {
   if (!(*studentList)->student)
   {
@@ -174,13 +170,13 @@ char *deleteSpecificItem(studentList_t **studentList, char *val)
   studentList_t *studentToDelete = *studentList;
   studentList_t *tmp = NULL;
 
-  while (strcmp(studentToDelete->student->firstname, val) != 0 && studentToDelete->next != NULL)
+  while (studentToDelete->student->id != etudiantId && studentToDelete->next != NULL)
   {
     tmp = studentToDelete;
     studentToDelete = studentToDelete->next;
   }
 
-  if (strcmp(studentToDelete->student->firstname, val) == 0)
+  if (studentToDelete->student->id == etudiantId)
   {
     if (tmp)
     {
@@ -196,12 +192,12 @@ char *deleteSpecificItem(studentList_t **studentList, char *val)
     deleteAllSubject(&studentToDelete->student->subjectList);
     free(studentToDelete->student);
     free(studentToDelete);
-    strcat(val, " vient d'être supprimé\n");
-    return val;
+    return "Eleve supprimé";
   }
   return "NOPE";
 }
-void listOnePromotion(studentList_t *studentList, char *namePromotion, int type)
+
+void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, int type)
 {
   char **nameOfPromotion = initDoubleChar(studentList->nbr, SIZE_MAX);
   int exist = 0;
@@ -262,9 +258,9 @@ void listOnePromotion(studentList_t *studentList, char *namePromotion, int type)
   freeDoubleChar(&nameOfPromotion, studentList->nbr);
 }
 
-void displaySearchedStudentForModification(studentList_t *studentList, char *etudiantName)
+void displaySearchedStudentForModification(studentList_t *studentList, int etudiantId)
 {
-  studentList_t *studentToDisplay = search(studentList, etudiantName);
+  studentList_t *studentToDisplay = search(studentList, etudiantId);
   int choice;
   if (studentToDisplay)
   {
@@ -275,6 +271,7 @@ void displaySearchedStudentForModification(studentList_t *studentList, char *etu
 
     printf("Que voulais vous modifier entrez votre choix qui doit être une des nombres de la list : \n");
     scanf("%d", &choice);
+    enterToContinue();
     modificationList(&studentToDisplay, choice);
   }
 }
@@ -318,4 +315,42 @@ char *modificationList(studentList_t **studentList, int choice)
   }
 
   return "fait";
+}
+
+void insertNoteForOnePromotion(studentList_t *studentList, char *namePromotion)
+{
+  char **nameOfPromotion = initDoubleChar(studentList->nbr, SIZE_MAX);
+  if (studentList == NULL)
+  {
+    exit(EXIT_FAILURE);
+  }
+
+  if (studentList->student == NULL)
+  {
+    fprintf(stdout, "-+-+-+-+-+-+-+ Veuillez créer des étudiants -+-+-+-+-+-+-+-+-\n");
+  }
+  else
+  {
+    studentList_t *currentList = studentList;
+    fprintf(stdout, "-+-+-+-+-+-+-+ Début d'ajout de note pour une promotion-+-+-+-+-+-+-+-+-\n");
+
+    while (currentList->next)
+    {
+
+      if (strcmp(currentList->student->promotion, namePromotion) == 0)
+      {
+        fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", currentList->student->firstname, currentList->student->lastname, currentList->student->promotion, currentList->student->id);
+        createNewSubject(currentList->student);
+      
+      }
+
+      if (currentList->next->next)
+      {
+        fprintf(stdout, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n");
+      }
+      currentList = currentList->next;
+    }
+    fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
+  }
+  freeDoubleChar(&nameOfPromotion, studentList->nbr);
 }
