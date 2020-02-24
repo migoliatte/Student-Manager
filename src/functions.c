@@ -329,18 +329,18 @@ studentList_t *initForTest(studentList_t *studentList)
 {
 
     studentList = easyAddStudent(studentList, "val");
-    studentList = easyAddSubject(studentList, "math", 2);
+    studentList = easyAddSubject(studentList, "francais", 2);
     studentList = easyAddSubject(studentList, "français", 4);
-    studentList = easyAddSubject(studentList, "math", 6);
-        studentList = easyAddStudent(studentList, "mac");
-
+    studentList = easyAddSubject(studentList, "francais", 6);
+    
+    studentList = easyAddStudent(studentList, "mac");
     studentList = easyAddSubject(studentList, "truc", 12);
-    studentList = easyAddSubject(studentList, "français", 13);
+    studentList = easyAddSubject(studentList, "truc", 13);
     studentList = easyAddSubject(studentList, "truc", 17);
-            studentList = easyAddStudent(studentList, "gana");
 
+    studentList = easyAddStudent(studentList, "gana");
     studentList = easyAddSubject(studentList, "math", 20);
-    studentList = easyAddSubject(studentList, "machin", 1);
+    studentList = easyAddSubject(studentList, "math", 1);
 
     return studentList;
 }

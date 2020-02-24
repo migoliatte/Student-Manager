@@ -320,7 +320,7 @@ void printAllMoyenneBySubject(studentList_t *studentList)
                 for (int a = 0; a < studentList->student->subjectList->nbr; a++)
                 {
                     notes[a] = 0;
-                    nbrOfEach[a] = 0;
+                    nbrOfEach[a] = 1;
                     scale[a] = 0;
                     moyenneByName[a] = 0;
                 }

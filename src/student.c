@@ -203,6 +203,9 @@ void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, in
   int exist = 0;
   int i = 0;
   int j = 0;
+  double note = 0;
+  int nbr=0;
+
   if (studentList == NULL)
   {
     exit(EXIT_FAILURE);
@@ -242,9 +245,21 @@ void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, in
       }
       else if (type == 3)
       {
+        //int scale = 0;
         if (strcmp(currentList->student->promotion, namePromotion) == 0)
         {
           fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", currentList->student->firstname, currentList->student->lastname, currentList->student->promotion, currentList->student->id);
+          if (currentList->student->subjectList)
+          {
+            subjectList_t *actualSubject = currentList->student->subjectList;
+
+            while (actualSubject->next)
+            {
+              note += actualSubject->subject->note * actualSubject->subject->scale;
+              actualSubject = actualSubject->next;
+              nbr++;
+            }
+          }
         }
       }
       if (currentList->next->next)
@@ -253,6 +268,11 @@ void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, in
       }
       currentList = currentList->next;
     }
+    if (type == 3)
+    {
+      fprintf(stdout, "moyenne de la promotion -> %.2lf \n", note/nbr);
+    }
+
     fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
   }
   freeDoubleChar(&nameOfPromotion, studentList->nbr);
@@ -341,7 +361,6 @@ void insertNoteForOnePromotion(studentList_t *studentList, char *namePromotion)
       {
         fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", currentList->student->firstname, currentList->student->lastname, currentList->student->promotion, currentList->student->id);
         createNewSubject(currentList->student);
-      
       }
 
       if (currentList->next->next)

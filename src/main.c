@@ -10,7 +10,9 @@ int main(int argc, char const *argv[])
     studentList_t *studentList = studentInitialisation();
     menu(studentList);
     //studentList = initForTest(studentList);
-    //printAllMoyenneBySubject(studentList);
+    //allTypeOfDisplayStudent(studentList,"val",3);
+   // printAllMoyenneBySubject(studentList);
+    // printListStudent(studentList);
     printf("SIZE_MAX = %d\nEndProgram\nGoodBye", SIZE_MAX);
     return 0;
 }
