@@ -56,10 +56,10 @@ void displaySubjectListOfIUserInFile(subjectList_t *subjectList, FILE *file)
             {
                 fputs("     <subject>\n", file);
 
-                fprintf(file, "             <sId>%d</sId>\n", actualSubject->subject->id);
-                fprintf(file, "             <name>%s</name>\n", actualSubject->subject->name);
-                fprintf(file, "             <note>%lf</note>\n", actualSubject->subject->note);
-                fprintf(file, "             <scale>%d</scale>\n", actualSubject->subject->scale);
+                fprintf(file, "             <sId> %d </sId>\n", actualSubject->subject->id);
+                fprintf(file, "             <name> %s </name>\n", actualSubject->subject->name);
+                fprintf(file, "             <note> %lf </note>\n", actualSubject->subject->note);
+                fprintf(file, "             <scale> %d </scale>\n", actualSubject->subject->scale);
 
                 fputs("     </subject>\n", file);
                 actualSubject = actualSubject->next;
@@ -68,12 +68,13 @@ void displaySubjectListOfIUserInFile(subjectList_t *subjectList, FILE *file)
     }
 }
 
-void chargeFile(char *nameFile)
+studentList_t *chargeFile(char *nameFile, studentList_t *studentListG)
 {
     int i = 0;
     FILE *file = NULL;
     file = fopen(nameFile, "r");
-    studentList_t *studentList = studentInitialisation();
+    // studentList_t *studentList = studentInitialisation();
+    studentList_t *studentList = studentListG;
 
     char *studentFirstname = malloc(SIZE_MAX * sizeof(char));
     char *studentLastname = malloc(SIZE_MAX * sizeof(char));
@@ -120,6 +121,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -151,6 +153,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -179,6 +182,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -205,6 +209,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -231,6 +236,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -256,6 +262,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -281,6 +288,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -308,6 +316,7 @@ void chargeFile(char *nameFile)
                 if (inFirst)
                 {
                     first[a] = line[u];
+first[a+1] = '\0';
                     a++;
                 }
             }
@@ -384,11 +393,13 @@ void chargeFile(char *nameFile)
         free(studentLastname);
         free(studentPromotion);
         free(subjectName);
+        printListStudent(studentList);
     }
     else
     {
         printf("\n ------------------ Impossible d'ouvrire le fichier test.xml ------------------ \n");
+        
     }
-
+    return studentList;
     // printListSubject(studentList);
 }

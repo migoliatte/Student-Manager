@@ -22,7 +22,7 @@ studentList_t *createNewStudent(studentList_t *studentList)
   char *studentPromotion = malloc(SIZE_MAX * sizeof(char));
   if (studentFirstname == NULL || studentLastname == NULL || studentPromotion == NULL)
   {
-    printf("error");
+    exit(EXIT_FAILURE);
   }
 
   fgetsCheck(studentFirstname, "Veuillez rentrer votre prénom", SIZE_MAX);
@@ -99,6 +99,7 @@ void deleteFirstStudent(studentList_t *studentList)
     free(toDelete);
   }
 }
+
 /* Affichage de prenom/nom/id de tous les étudiants */
 void printListStudent(studentList_t *studentList)
 {
@@ -128,6 +129,7 @@ void printListStudent(studentList_t *studentList)
   }
 }
 
+/*Permet de récuperer un étudiant dans la liste (s'il éxiste)*/
 studentList_t *search(studentList_t *studentList, int etudiantId)
 {
   studentList_t *currentList = studentList;
@@ -147,6 +149,7 @@ studentList_t *search(studentList_t *studentList, int etudiantId)
   return NULL;
 }
 
+/*Permet d'afficher les informations de l'étudiant recherché*/
 void displaySearchedStudent(studentList_t *studentList, int etudiantId)
 {
   studentList_t *studentToDisplay = search(studentList, etudiantId);
@@ -157,6 +160,7 @@ void displaySearchedStudent(studentList_t *studentList, int etudiantId)
   }
 }
 
+/*Supprime un étudiant recherché*/
 char *deleteSpecificItem(studentList_t **studentList, int etudiantId)
 {
   if (!(*studentList)->student)
@@ -197,6 +201,7 @@ char *deleteSpecificItem(studentList_t **studentList, int etudiantId)
   return "NOPE";
 }
 
+/*Permet d'afficher toutes les informations nécessaires pour un étudiant*/
 void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, int type)
 {
   char **nameOfPromotion = initDoubleChar(studentList->nbr, SIZE_MAX);
@@ -204,7 +209,7 @@ void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, in
   int i = 0;
   int j = 0;
   double note = 0;
-  int nbr=0;
+  int nbr = 0;
 
   if (studentList == NULL)
   {
@@ -245,19 +250,17 @@ void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, in
       }
       else if (type == 3)
       {
-        //int scale = 0;
         if (strcmp(currentList->student->promotion, namePromotion) == 0)
         {
           fprintf(stdout, "prenom -> %s / nom -> %s / promotion -> %s / id : %d \n", currentList->student->firstname, currentList->student->lastname, currentList->student->promotion, currentList->student->id);
           if (currentList->student->subjectList)
           {
             subjectList_t *actualSubject = currentList->student->subjectList;
-
             while (actualSubject->next)
             {
               note += actualSubject->subject->note * actualSubject->subject->scale;
+              nbr += 1 * actualSubject->subject->scale;
               actualSubject = actualSubject->next;
-              nbr++;
             }
           }
         }
@@ -270,7 +273,10 @@ void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, in
     }
     if (type == 3)
     {
-      fprintf(stdout, "moyenne de la promotion -> %.2lf \n", note/nbr);
+      if (note)
+      {
+        fprintf(stdout, "moyenne de la promotion -> %.2lf \n", note / nbr);
+      }
     }
 
     fprintf(stdout, "-+-+-+-+-+-+-+ Fin printListStudent-+-+-+-+-+-+-+-+-\n");
@@ -278,6 +284,7 @@ void allTypeOfDisplayStudent(studentList_t *studentList, char *namePromotion, in
   freeDoubleChar(&nameOfPromotion, studentList->nbr);
 }
 
+/*Permet l'affichage d'un étudiant pour le modifier par la suite*/
 void displaySearchedStudentForModification(studentList_t *studentList, int etudiantId)
 {
   studentList_t *studentToDisplay = search(studentList, etudiantId);
@@ -288,14 +295,13 @@ void displaySearchedStudentForModification(studentList_t *studentList, int etudi
     printf("2) Le Nom de l'Etudiant est : %s \n", studentToDisplay->student->lastname);
     printf("3) Sa promotion : %s  \n", studentToDisplay->student->promotion);
     printf("4) Pour modifier ses notes \n");
-
-    printf("Que voulais vous modifier entrez votre choix qui doit être une des nombres de la list : \n");
-    scanf("%d", &choice);
+    choice = verifInt("Que voulais vous modifier entrez votre choix qui doit être une des nombres de la list : \n");
     enterToContinue();
     modificationList(&studentToDisplay, choice);
   }
 }
 
+/*Affiche la liste des modifications possibles*/
 char *modificationList(studentList_t **studentList, int choice)
 {
 
@@ -304,10 +310,8 @@ char *modificationList(studentList_t **studentList, int choice)
   studentList_t *studentModif = *studentList;
   if (studentModif->student == NULL)
   {
-    return "PAS DETUDIANT";
+    return "Il n'y a pas d'étudiants";
   }
-  //studentList_t *tmp = NULL;
-
   if (choice == 1)
   {
 
@@ -337,6 +341,7 @@ char *modificationList(studentList_t **studentList, int choice)
   return "fait";
 }
 
+/*Permet d'ajouter une note à tous les élèves d'une promotion, élève par élève*/
 void insertNoteForOnePromotion(studentList_t *studentList, char *namePromotion)
 {
   char **nameOfPromotion = initDoubleChar(studentList->nbr, SIZE_MAX);

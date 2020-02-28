@@ -9,6 +9,7 @@ void enterToContinue(void)
     free(choix);
     system("clear");
 }
+
 /*Purge le stdin */
 void flushForFgetc(void)
 {
@@ -25,7 +26,7 @@ void fgetsCheck(char *input, char *message, unsigned int size)
     char *positionEntree = NULL;
     do
     {
-        fprintf(stdout, "%s : ", message);
+        fprintf(stdout, "%s  ", message);
         if (fgets(input, size, stdin) != NULL)
         {
             positionEntree = strchr(input, '\n');
@@ -54,7 +55,7 @@ int verifInt(char *message)
         fgetsCheck(choix, message, 3);
         if (atoi(choix) < 1 || atoi(choix) > 20)
         {
-            fprintf(stdout, "Veuillez rentrer un int !");
+            fprintf(stdout, "Veuillez rentrer un int !\n");
         }
     } while (atoi(choix) < 1 || atoi(choix) > 20);
     int number = atoi(choix);
@@ -62,6 +63,7 @@ int verifInt(char *message)
     return number;
 }
 
+/*Verifie que l'entrée de l'utilisateur est un double*/
 double verifDouble(void)
 {
     char *choix = malloc(3 * sizeof(char));
@@ -90,6 +92,7 @@ double verifDouble(void)
     return value;
 }
 
+/*Initialise un tableau char à double dimension*/
 char **initDoubleChar(int N, int M)
 {
     char **tab;
@@ -107,6 +110,7 @@ char **initDoubleChar(int N, int M)
     return tab;
 }
 
+/*libère un tableau char à double dimensions*/
 void freeDoubleChar(char ***ptab, int N)
 {
     if (ptab)
@@ -120,6 +124,7 @@ void freeDoubleChar(char ***ptab, int N)
     *ptab = NULL;
 }
 
+/*initialise un tableau int à double dimension*/
 int **initDoubleInt(int N, int M)
 {
     int **tab;
@@ -137,6 +142,7 @@ int **initDoubleInt(int N, int M)
     return tab;
 }
 
+/*libère un tableau int à double dimensions*/
 void freeDoubleInt(int ***ptab, int N)
 {
     if (ptab)
@@ -150,6 +156,7 @@ void freeDoubleInt(int ***ptab, int N)
     *ptab = NULL;
 }
 
+/*initialise un tableau double à double dimension*/
 double **initDoubleDouble(int N, int M)
 {
     double **tab;
@@ -167,6 +174,7 @@ double **initDoubleDouble(int N, int M)
     return tab;
 }
 
+/*libère un tableau double à double dimensions*/
 void freeDoubleDouble(double ***ptab, int N)
 {
     if (ptab)
@@ -178,6 +186,15 @@ void freeDoubleDouble(double ***ptab, int N)
     }
     free(*ptab);
     *ptab = NULL;
+}
+
+/* libère la mémoire de toutes les structures étudiantes et notes*/
+void allFree(studentList_t *studentList)
+{
+    while (studentList->student)
+    {
+        deleteFirstStudent(studentList);
+    }
 }
 
 /*Affiche et traite le menu*/
@@ -252,10 +269,10 @@ void menu(studentList_t *studentList)
     case 11:
         system("clear");
         fgetsCheck(inputUser, "Donne moi le nom du fichier avec l'extension :", SIZE_MAX);
-        chargeFile(inputUser);
+        studentList = chargeFile(inputUser, studentList);
         break;
     case 12:
-        checkSauvegarde(studentList, verifInt("Voulez vous vraiment fermer le programme sans sauvaugarder ? \n 1 pour sauv et 2 pour quitter :"));
+        checkSauvegarde(studentList, verifInt("Appuyez sur 1 pour sauvegarder et 2 pour quitter \n"));
         return;
     default:
         system("clear");
@@ -266,27 +283,7 @@ void menu(studentList_t *studentList)
     menu(studentList);
 }
 
-void allFree(studentList_t *studentList)
-{
-    if (studentList->student->subjectList->next->subject->name != NULL)
-        free(studentList->student->subjectList->next->subject->name);
-
-    if (studentList->student->firstname != NULL)
-        free(studentList->student->firstname);
-
-    if (studentList->student->lastname != NULL)
-        free(studentList->student->lastname);
-
-    if (studentList->student->promotion != NULL)
-        free(studentList->student->promotion);
-
-    if (studentList->student->subjectList != NULL)
-        deleteAllSubject(&studentList->student->subjectList);
-
-    if (studentList != NULL)
-        free(studentList);
-}
-
+/*Permet d'ajouter des notes facilement afin de faire des tests plus rapidements*/
 studentList_t *easyAddSubject(studentList_t *studentList, char *name, double note)
 {
     subject_t *subject = malloc(sizeof(*subject));
@@ -304,6 +301,8 @@ studentList_t *easyAddSubject(studentList_t *studentList, char *name, double not
 
     return studentList;
 }
+
+/*Permet d'ajouter des étudiants facilement afin de faire des tests plus rapidements*/
 studentList_t *easyAddStudent(studentList_t *studentList, char *name)
 {
     student_t *student = malloc(sizeof(*student));
@@ -325,6 +324,7 @@ studentList_t *easyAddStudent(studentList_t *studentList, char *name)
     return studentList;
 }
 
+/*Permet d'ajouter des étudiants & des notes facilement afin de faire des tests plus rapidements*/
 studentList_t *initForTest(studentList_t *studentList)
 {
 
@@ -332,7 +332,7 @@ studentList_t *initForTest(studentList_t *studentList)
     studentList = easyAddSubject(studentList, "francais", 2);
     studentList = easyAddSubject(studentList, "français", 4);
     studentList = easyAddSubject(studentList, "francais", 6);
-    
+
     studentList = easyAddStudent(studentList, "mac");
     studentList = easyAddSubject(studentList, "truc", 12);
     studentList = easyAddSubject(studentList, "truc", 13);
@@ -344,4 +344,3 @@ studentList_t *initForTest(studentList_t *studentList)
 
     return studentList;
 }
-

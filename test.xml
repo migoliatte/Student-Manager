@@ -1,0 +1,13 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes" ?>
+<student>
+     <userId> 1 </userId>
+     <firstname> val </firstname>
+     <lastname> val </lastname>
+     <promotion> val </promotion>
+     <subject>
+             <sId> 1 </sId>
+             <name> math </name>
+             <note> 12.000000 </note>
+             <scale> 2 </scale>
+     </subject>
+</student>
