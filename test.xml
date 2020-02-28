@@ -1,13 +1,55 @@
 <?xml version = "1.0" encoding="UTF-8" standalone="yes" ?>
 <student>
-     <userId> 1 </userId>
-     <firstname> val </firstname>
-     <lastname> val </lastname>
-     <promotion> val </promotion>
+     <userId> 4 </userId>
+     <firstname> anais </firstname>
+     <lastname> raynal </lastname>
+     <promotion> 1a1 </promotion>
+     <subject>
+             <sId> 1 </sId>
+             <name> toto </name>
+             <note> 20.000000 </note>
+             <scale> 2 </scale>
+     </subject>
+</student>
+<student>
+     <userId> 3 </userId>
+     <firstname> valentin </firstname>
+     <lastname> ramond </lastname>
+     <promotion> 3a3 </promotion>
+     <subject>
+             <sId> 2 </sId>
+             <name> c </name>
+             <note> 12.000000 </note>
+             <scale> 2 </scale>
+     </subject>
      <subject>
              <sId> 1 </sId>
              <name> math </name>
-             <note> 12.000000 </note>
+             <note> 12.500000 </note>
+             <scale> 2 </scale>
+     </subject>
+</student>
+<student>
+     <userId> 2 </userId>
+     <firstname> zozo </firstname>
+     <lastname> raynal </lastname>
+     <promotion> 1a1 </promotion>
+     <subject>
+             <sId> 3 </sId>
+             <name> truc </name>
+             <note> 15.000000 </note>
+             <scale> 2 </scale>
+     </subject>
+     <subject>
+             <sId> 2 </sId>
+             <name> math </name>
+             <note> 10.000000 </note>
+             <scale> 1 </scale>
+     </subject>
+     <subject>
+             <sId> 1 </sId>
+             <name> c </name>
+             <note> 20.000000 </note>
              <scale> 2 </scale>
      </subject>
 </student>

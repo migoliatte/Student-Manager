@@ -85,8 +85,9 @@ studentList_t *chargeFile(char *nameFile, studentList_t *studentListG)
     }
 
     char *subjectName = malloc(SIZE_MAX * sizeof(char));
-    double subjectNote;
-    int subjectScale;
+    strcpy(subjectName, "tata");
+    double subjectNote = 0;
+    int subjectScale = 0;
     if (subjectName == NULL)
     {
         exit(EXIT_FAILURE);
@@ -121,7 +122,7 @@ studentList_t *chargeFile(char *nameFile, studentList_t *studentListG)
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -153,7 +154,7 @@ first[a+1] = '\0';
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -182,7 +183,7 @@ first[a+1] = '\0';
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -209,7 +210,7 @@ first[a+1] = '\0';
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -236,7 +237,7 @@ first[a+1] = '\0';
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -262,7 +263,7 @@ first[a+1] = '\0';
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -288,7 +289,7 @@ first[a+1] = '\0';
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -316,7 +317,7 @@ first[a+1] = '\0';
                 if (inFirst)
                 {
                     first[a] = line[u];
-first[a+1] = '\0';
+                    first[a + 1] = '\0';
                     a++;
                 }
             }
@@ -355,24 +356,26 @@ first[a+1] = '\0';
                                 studentList->nbr = studentList->student->id;
                             }
                             //student->subjectList
-
                             subject_t *subject = malloc(sizeof(*subject));
-                            if (subject)
+                            if (strcmp(subjectName, "tata") != 0)
                             {
-                                subject->name = malloc(SIZE_MAX * sizeof(char));
-                                strcpy(subject->name, subjectName);
-                                subject->note = subjectNote;
-                                subject->scale = subjectScale;
-                                if (studentList->student->subjectList->subject)
+                                if (subject)
                                 {
-                                    studentList->student->subjectList->nbr = studentList->student->subjectList->subject->id;
+                                    subject->name = malloc(SIZE_MAX * sizeof(char));
+                                    strcpy(subject->name, subjectName);
+                                    subject->note = subjectNote;
+                                    subject->scale = subjectScale;
+                                    subject->id = studentList->student->subjectList->nbr + 1;
+                                    studentList->student->subjectList = addNewSubject(studentList->student->subjectList, subject);
+                                    if (studentList->student->subjectList->subject)
+                                    {
+                                        studentList->student->subjectList->nbr = studentList->student->subjectList->subject->id;
+                                    }
                                 }
-                                subject->id = studentList->student->subjectList->nbr + 1;
-                                studentList->student->subjectList = addNewSubject(studentList->student->subjectList, subject);
-                            }
-                            else
-                            {
-                                exit(EXIT_FAILURE);
+                                else
+                                {
+                                    exit(EXIT_FAILURE);
+                                }
                             }
                         }
                         else
@@ -398,7 +401,6 @@ first[a+1] = '\0';
     else
     {
         printf("\n ------------------ Impossible d'ouvrire le fichier test.xml ------------------ \n");
-        
     }
     return studentList;
     // printListSubject(studentList);
